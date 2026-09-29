@@ -1,0 +1,105 @@
+.support-container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding-bottom: 40px;
+}
+
+.help-topic-item {
+  transition: all 0.2s ease;
+  color: var(--ui-text);
+}
+
+.help-topic-item:hover, .help-topic-item:focus {
+  background: var(--ui-purple-soft) !important;
+  border-color: var(--ui-purple) !important;
+  color: var(--ui-purple);
+  outline: none;
+}
+
+.support-form {
+  background: white;
+  padding: 24px;
+  border-radius: 16px;
+  border: 1px solid var(--ui-border);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.02);
+}
+
+.support-form-group {
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.support-form-group label {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ui-text);
+}
+
+.support-form-group input, 
+.support-form-group select, 
+.support-form-group textarea {
+  width: 100%;
+  padding: 12px 16px;
+  border: 1px solid var(--ui-border);
+  border-radius: 10px;
+  font-size: 15px;
+  font-family: inherit;
+  color: var(--ui-text);
+  outline: none;
+  background: #fff;
+  transition: all 0.2s;
+}
+
+.support-form-group input:focus, 
+.support-form-group select:focus, 
+.support-form-group textarea:focus {
+  border-color: var(--ui-purple);
+  box-shadow: 0 0 0 3px rgba(112, 64, 189, 0.08);
+}
+
+.support-form-group textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+.file-upload-wrapper {
+  position: relative;
+  overflow: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+.file-upload-wrapper input[type=file] {
+  font-size: 100px;
+  position: absolute;
+  left: 0;
+  top: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.faq-categories {
+  display: flex;
+  overflow-x: auto;
+  gap: 8px;
+  padding-bottom: 8px;
+  margin-bottom: 24px;
+  scrollbar-width: none; /* Firefox */
+}
+
+.faq-categories::-webkit-scrollbar {
+  display: none; /* Chrome, Safari */
+}
+
+/* Mobile adjustments */
+@media (max-width: 768px) {
+  .support-page {
+    padding-top: max(24px, env(safe-area-inset-top));
+  }
+  
+  .support-form {
+    padding: 16px;
+  }
+}

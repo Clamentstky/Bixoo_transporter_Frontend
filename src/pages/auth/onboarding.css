@@ -1,0 +1,169 @@
+.onboarding-page {
+  min-height: 100vh;
+  padding: 50px 20px;
+  background: #f4f7fb;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+:where(.onboarding-page) .onboarding-card {
+  width: 100%;
+  max-width: 850px;
+  background: #ffffff;
+  padding: 45px 50px;
+  border-radius: var(--ui-radius);
+  box-shadow: var(--ui-shadow);
+}
+
+:where(.onboarding-page) .onboarding-header {
+  text-align: center;
+  margin-bottom: 38px;
+}
+
+:where(.onboarding-page) .onboarding-logo {
+  font-size: var(--font-balance);
+  font-weight: 700;
+  letter-spacing: -3px;
+  color: var(--ui-text);
+}
+
+:where(.onboarding-page) .onboarding-header p {
+  margin: 3px 0 20px;
+  color: var(--ui-purple);
+  font-weight: 600;
+}
+
+:where(.onboarding-page) .onboarding-header h1 {
+  margin: 0;
+  font-size: var(--font-stat);
+  color: var(--ui-text);
+}
+
+:where(.onboarding-page) .onboarding-header span {
+  display: block;
+  margin-top: 8px;
+  color: var(--ui-purple);
+  font-size: var(--font-secondary);
+}
+
+:where(.onboarding-page) .form-section {
+  margin-bottom: 30px;
+  padding: 25px;
+  border: 1px solid #e3e8ef;
+  border-radius: var(--ui-radius);
+  background: #fbfcfe;
+}
+
+:where(.onboarding-page) .form-section h3 {
+  margin: 0 0 20px;
+  color: var(--ui-text);
+  font-size: var(--font-card);
+}
+
+:where(.onboarding-page) .form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+:where(.onboarding-page) .form-field {
+  display: flex;
+  flex-direction: column;
+}
+
+:where(.onboarding-page) .form-field.full-width {
+  grid-column: 1 / -1;
+}
+
+:where(.onboarding-page) .form-field label {
+  margin-bottom: 8px;
+  color: var(--ui-text);
+  font-size: var(--font-meta);
+  font-weight: 700;
+}
+
+:where(.onboarding-page) .form-field input,
+:where(.onboarding-page) .form-field select {
+  width: 100%;
+  height: 50px;
+  padding: 0 14px;
+  border: 1px solid #ccd5df;
+  border-radius: 9px;
+  outline: none;
+  background: white;
+  color: var(--ui-text);
+  font-size: var(--font-secondary);
+}
+
+:where(.onboarding-page) .form-field input:focus,
+:where(.onboarding-page) .form-field select:focus {
+  border-color: #087fd1;
+  box-shadow: 0 0 0 3px rgba(8, 127, 209, 0.08);
+}
+
+:where(.onboarding-page) .form-field input::placeholder {
+  color: var(--ui-purple);
+}
+
+:where(.onboarding-page) .onboarding-submit {
+  width: 100%;
+  height: 56px;
+  border: none;
+  border-radius: 10px;
+  background: var(--ui-purple);
+  color: white;
+  font-size: var(--font-body);
+  font-weight: 700;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+:where(.onboarding-page) .onboarding-submit:hover {
+  background: var(--ui-purple);
+}
+
+:where(.onboarding-page) .login-link {
+  text-align: center;
+  margin-top: 22px;
+  color: var(--ui-purple);
+  font-size: var(--font-secondary);
+}
+
+:where(.onboarding-page) .login-link button {
+  border: none;
+  background: transparent;
+  color: var(--ui-purple);
+  font-weight: 700;
+  cursor: pointer;
+  margin-left: 5px;
+}
+
+@media (max-width: 650px) {
+  .onboarding-page {
+    padding: 20px 12px;
+  }
+
+  :where(.onboarding-page) .onboarding-card {
+    padding: 30px 20px;
+    border-radius: var(--ui-radius);
+  }
+
+  :where(.onboarding-page) .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  :where(.onboarding-page) .form-field.full-width {
+    grid-column: auto;
+  }
+
+  :where(.onboarding-page) .form-section {
+    padding: 18px;
+  }
+
+  :where(.onboarding-page) .onboarding-header h1 {
+    font-size: 28px;
+  }
+}
+.registration-error { color: var(--ui-danger, #b42318); margin-bottom: 16px; }
+.onboarding-submit:disabled { opacity: .65; cursor: wait; }

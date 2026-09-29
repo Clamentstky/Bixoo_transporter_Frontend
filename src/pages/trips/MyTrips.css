@@ -1,0 +1,54 @@
+.my-trips-page {
+  .my-trips-count { display: flex; align-items: center; gap: 8px; padding: 10px 16px; border: 1px solid var(--ui-border); border-radius: 10px; background: white; color: var(--ui-purple); font-weight: 700; white-space: nowrap; }
+  .my-trips-count small { color: var(--ui-muted); font-size: var(--font-meta); font-weight: 400; }
+  .my-trips-tabs { display: inline-flex; max-width: 100%; gap: 6px; padding: 5px; border: 1px solid var(--ui-border); border-radius: 12px; background: #efecf4; margin-bottom: 24px; }
+  .trip-tab { display: inline-flex; align-items: center; justify-content: center; gap: 10px; min-height: 44px; padding: 10px 22px; border: 0; border-radius: 8px; background: transparent; color: var(--ui-muted); font-size: var(--font-secondary); font-weight: 700; cursor: pointer; }
+  .trip-tab.active { background: var(--ui-purple); color: white; box-shadow: none; }
+  .trip-tab.active span { background: #ffffff26; color: white; }
+  .trip-tab span { display: grid; place-items: center; min-width: 23px; height: 23px; padding: 0 5px; border-radius: 6px; background: var(--ui-purple-soft); color: var(--ui-purple); font-size: var(--font-meta); }
+  .my-trips-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; align-items: start; }
+  .my-trip-card { padding: 24px; border: 1px solid var(--ui-border); border-radius: var(--ui-radius); background: white; box-shadow: var(--ui-shadow); min-width: 0; }
+  .my-trip-card-header { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-bottom: 18px; border-bottom: 1px solid var(--ui-border); }
+  .trip-order-label { display: block; font-size: var(--font-meta); font-weight: 700; letter-spacing: .8px; color: var(--ui-muted); margin-bottom: 5px; }
+  .my-trip-card-header > div:first-child strong { font-size: var(--font-body); overflow-wrap: anywhere; }
+  .trip-payout { text-align: right; }
+  .trip-payout small { display: block; font-size: var(--font-meta); color: var(--ui-muted); }
+  .trip-payout strong { display: block; font-size: 28px; color: var(--ui-purple); font-variant-numeric: tabular-nums; }
+  .my-trip-status-row { display: flex; justify-content: space-between; align-items: center; margin: 18px 0; }
+  .trip-status { display: inline-flex; align-items: center; gap: 7px; padding: 5px 10px; border-radius: 6px; font-size: var(--font-meta); font-weight: 700; }
+  .trip-status i { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+  .trip-status.progress { color: var(--ui-purple); background: var(--ui-purple-soft); }
+  .trip-status.completed { color: #26764f; background: #eaf6ef; }
+  .trip-load-id { color: var(--ui-muted); font-size: var(--font-meta); }
+  .my-trip-route { display: flex; flex-direction: column; margin: 24px 4px; }
+  .trip-route-point { display: flex; gap: 15px; }
+  .route-dot { flex: 0 0 10px; height: 10px; margin-top: 7px; border-radius: 50%; background: var(--ui-purple); box-shadow: 0 0 0 4px var(--ui-purple-soft); }
+  .route-dot.delivery { border-radius: 2px; background: #27845a; box-shadow: 0 0 0 4px #eaf6ef; }
+  .trip-route-point > div { min-width: 0; }
+  .trip-route-point small { display: block; font-size: var(--font-meta); color: var(--ui-muted); }
+  .trip-route-point strong { display: block; font-size: var(--font-card); margin: 3px 0; }
+  .trip-route-point p { font-size: var(--font-meta); color: var(--ui-muted); }
+  .trip-route-connector { height: 20px; margin: 4px 0 4px 4px; border-left: 1px dashed #d0c4de; }
+  .my-trip-info { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; padding: 16px 0; border-block: 1px solid var(--ui-border); }
+  .my-trip-info span { display: block; color: var(--ui-muted); font-size: var(--font-meta); margin-bottom: 5px; }
+  .my-trip-info strong { display: block; font-size: var(--font-meta); overflow-wrap: anywhere; }
+  .my-trip-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 20px; }
+  .my-trip-actions button { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 10px 12px; border: 1px solid var(--ui-border); border-radius: 10px; background: white; color: var(--ui-purple); font-size: var(--font-secondary); font-weight: 700; cursor: pointer; }
+  .my-trip-actions .trip-navigate-btn { background: var(--ui-purple); border-color: var(--ui-purple); color: white; }
+  .my-trip-actions button:hover { border-color: var(--ui-purple); }
+  .my-trip-actions .trip-navigate-btn:hover { background: var(--ui-purple-dark); }
+  .empty-trips { grid-column: 1 / -1; padding: 48px 24px; border: 1px solid var(--ui-border); border-radius: var(--ui-radius); background: white; text-align: center; }
+  .empty-trips-icon { font-size: var(--font-stat); margin-bottom: 16px; }
+  .empty-trips p { color: var(--ui-muted); margin-top: 8px; }
+}
+@media (max-width: 1200px) { .my-trips-page .my-trips-list { grid-template-columns: 1fr; } .my-trips-page .my-trip-route { display: grid; grid-template-columns: 1fr 50px 1fr; align-items: center; } .my-trips-page .trip-route-connector { border-left: 0; border-top: 1px dashed #d0c4de; height: 1px; margin: 0 20px 0 0; } }
+@media (max-width: 600px) { .my-trips-page .my-trip-card { padding: 20px; } .my-trips-page .my-trip-route { display: flex; align-items: stretch; } .my-trips-page .trip-route-connector { height: 20px; border-left: 1px dashed #d0c4de; border-top: 0; margin: 4px 0 4px 4px; } .my-trips-page .my-trip-info { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; } .my-trips-page .trip-tab { padding: 10px 12px; gap: 7px; } }
+@media (min-width: 761px) {
+  .my-trips-page .my-trip-card:only-child { grid-column: 1 / -1; display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); column-gap: 32px; }
+  .my-trips-page .my-trip-card:only-child .my-trip-card-header,
+  .my-trips-page .my-trip-card:only-child .my-trip-status-row { grid-column: 1 / -1; }
+  .my-trips-page .my-trip-card:only-child .my-trip-route { grid-column: 1; grid-row: 3 / span 2; display: flex; flex-direction: column; align-items: stretch; margin: 12px 4px; }
+  .my-trips-page .my-trip-card:only-child .trip-route-connector { height: 20px; border-left: 1px dashed #d0c4de; border-top: 0; margin: 4px 0 4px 4px; }
+  .my-trips-page .my-trip-card:only-child .my-trip-info { grid-column: 2; grid-row: 3; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; border-top: 0; align-self: start; }
+  .my-trips-page .my-trip-card:only-child .my-trip-actions { grid-column: 2; grid-row: 4; align-self: end; margin-bottom: 12px; }
+}

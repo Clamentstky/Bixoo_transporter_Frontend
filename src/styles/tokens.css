@@ -1,0 +1,61 @@
+:root {
+  --font-family: "Segoe UI", Arial, Helvetica, sans-serif;
+  --font-caption: 12px;
+  --font-meta: 13px;
+  --font-secondary: 14px;
+  --font-body: 16px;
+  --font-card: 18px;
+  --font-section: 22px;
+  --font-title: 34px;
+  --font-stat: 32px;
+  --font-balance: 40px;
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+  --ui-purple: #7040bd;
+  --ui-purple-dark: #563090;
+  --ui-purple-accent: #8a5bc9;
+  --ui-purple-soft: #f0e9fa;
+  --ui-purple-faint: #faf7ff;
+  --ui-text: #292237;
+  --ui-muted: #6c6379;
+  --ui-subtle: #766d83;
+  --ui-border: #e4dfeb;
+  --ui-background: #f7f6fa;
+  --ui-surface: #ffffff;
+  --ui-success: #247448;
+  --ui-success-soft: #eaf5ee;
+  --ui-warning: #98600b;
+  --ui-warning-soft: #fff5e2;
+  --ui-danger: #ae354b;
+  --ui-danger-soft: #fff0f2;
+  --ui-info: #5654a6;
+  --ui-info-soft: #eeeffc;
+  --ui-radius: 16px;
+  --radius-control: 10px;
+  --radius-badge: 6px;
+  --ui-shadow: 0 2px 8px #30203c05;
+  --control-height: 44px;
+  --input-height: 48px;
+  --card-padding: 24px;
+  --page-padding: 40px;
+  --container-width: 1480px;
+  --header-height: 72px;
+  --sidebar-width: 248px;
+  --icon-small: 18px;
+  --icon-medium: 20px;
+  --icon-large: 28px;
+  --motion-fast: 160ms;
+}
+/* Shared breakpoints: mobile 600, tablet 1000, compact desktop 1200.
+   CSS media queries use literals; JS drawer matching uses the same 1000px boundary. */
+@media (max-width: 1200px) { :root { --page-padding: 32px; } }
+@media (max-width: 1000px) { :root { --font-title: 28px; --page-padding: 24px; } }
+@media (max-width: 600px) { :root { --font-title: 26px; --font-section: 20px; --page-padding: 16px; --card-padding: 20px; } }

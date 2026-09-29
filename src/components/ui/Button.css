@@ -1,0 +1,128 @@
+.bixoo-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+  border: none;
+  font-family: inherit;
+  font-weight: 600;
+  border-radius: 10px;
+  transition: all 150ms ease;
+  outline: none;
+  text-decoration: none;
+  box-sizing: border-box;
+}
+
+/* Disabled */
+.bixoo-btn:disabled,
+.bixoo-btn-loading {
+  opacity: 0.55;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* Focus */
+.bixoo-btn:focus-visible {
+  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.18);
+}
+
+/* Loading */
+.bixoo-btn-spinner {
+  animation: spin 1s linear infinite;
+  display: inline-flex;
+}
+
+@keyframes spin {
+  100% { transform: rotate(360deg); }
+}
+
+/* Full Width */
+.bixoo-btn-full {
+  width: 100%;
+}
+
+/* Sizes */
+.bixoo-btn-size-sm {
+  height: 36px;
+  padding: 0 14px;
+  font-size: 14px;
+}
+.bixoo-btn-size-md {
+  height: 42px;
+  padding: 0 16px;
+  font-size: 15px;
+}
+.bixoo-btn-size-lg {
+  height: 48px;
+  padding: 0 18px;
+  font-size: 15px;
+  border-radius: 12px;
+}
+
+/* Variants */
+.bixoo-btn-primary {
+  background: var(--ui-purple);
+  color: white;
+}
+.bixoo-btn-primary:hover {
+  background: var(--ui-purple-dark);
+}
+.bixoo-btn-primary:active {
+  background: #4a287d;
+}
+
+.bixoo-btn-secondary {
+  background: var(--ui-purple-soft);
+  color: var(--ui-purple);
+}
+.bixoo-btn-secondary:hover {
+  background: var(--ui-purple-faint);
+}
+
+.bixoo-btn-outline {
+  background: white;
+  border: 1px solid #DDD5EA;
+  color: var(--ui-purple);
+}
+.bixoo-btn-outline:hover {
+  background: var(--ui-purple-soft);
+  border-color: var(--ui-purple-soft);
+}
+
+.bixoo-btn-ghost {
+  background: transparent;
+  color: var(--ui-purple);
+}
+.bixoo-btn-ghost:hover {
+  background: var(--ui-purple-soft);
+}
+
+.bixoo-btn-danger {
+  background: var(--ui-danger-soft);
+  color: var(--ui-danger);
+  border: 1px solid #f2c7ce;
+}
+.bixoo-btn-danger:hover {
+  background: #ffe3e7;
+  border-color: var(--ui-danger);
+}
+
+.bixoo-btn-success {
+  background: var(--ui-success);
+  color: white;
+}
+.bixoo-btn-success:hover {
+  background: #1b5a37;
+}
+
+.bixoo-btn-link {
+  background: transparent;
+  color: var(--ui-purple);
+  padding: 0;
+  height: auto;
+  border-radius: 0;
+}
+.bixoo-btn-link:hover {
+  text-decoration: underline;
+}

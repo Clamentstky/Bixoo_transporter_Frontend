@@ -1,0 +1,158 @@
+.document-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 16px;
+}
+
+.document-modal {
+  background: white;
+  border-radius: 16px;
+  width: 100%;
+  max-width: 500px;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.document-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 24px;
+  border-bottom: 1px solid var(--ui-border);
+}
+
+.document-modal-header h2 {
+  margin: 0;
+  font-size: 20px;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--ui-muted);
+}
+
+.document-modal-body {
+  padding: 24px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.document-error {
+  padding: 12px;
+  background: #fdeced;
+  color: var(--ui-danger);
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.form-group label {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ui-text);
+}
+
+.form-group input[type="text"],
+.form-group input[type="date"] {
+  height: 48px;
+  padding: 0 16px;
+  border: 1px solid var(--ui-border);
+  border-radius: 10px;
+  font-size: 15px;
+  outline: none;
+}
+
+.form-group input[type="text"]:focus,
+.form-group input[type="date"]:focus {
+  border-color: var(--ui-purple);
+}
+
+.file-upload-box {
+  position: relative;
+  height: 120px;
+  border: 2px dashed var(--ui-border);
+  border-radius: 10px;
+  background: #faf9fb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.file-upload-box:hover {
+  border-color: var(--ui-purple);
+  background: var(--ui-purple-faint);
+}
+
+.file-upload-box input[type="file"] {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.upload-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  color: var(--ui-muted);
+  pointer-events: none;
+}
+
+.upload-placeholder span {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.upload-placeholder small {
+  font-size: 12px;
+}
+
+.upload-placeholder .file-name {
+  color: var(--ui-purple);
+  font-weight: 600;
+}
+
+.document-modal-footer {
+  padding: 16px 24px;
+  border-top: 1px solid var(--ui-border);
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+@media (max-width: 480px) {
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+}

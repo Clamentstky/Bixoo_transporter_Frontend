@@ -1,0 +1,38 @@
+﻿.notifications-page {
+  .notification-bell { position: relative; display: grid; place-items: center; width: 48px; height: 48px; border: 1px solid var(--ui-border); border-radius: 14px; background: white; color: var(--ui-purple); }
+  .notification-bell > span { position: absolute; top: -6px; right: -6px; display: grid; place-items: center; min-width: 21px; height: 21px; padding: 0 4px; border: 2px solid var(--ui-background); border-radius: 50%; background: var(--ui-purple); color: white; font-size: var(--font-meta); font-weight: 700; }
+  .notification-summary { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 20px 24px; margin-bottom: 28px; border: 1px solid #e0d4f1; border-radius: var(--ui-radius); background: var(--ui-purple-soft); }
+  .notification-summary > div { display: flex; align-items: center; gap: 14px; }
+  .notification-summary strong { font-size: var(--font-stat); color: var(--ui-purple); line-height: 1.2; }
+  .notification-summary span { font-size: var(--font-secondary); color: #5d477b; }
+  .notification-summary button { min-height: 42px; padding: 9px 16px; border: 1px solid #d9c9ee; border-radius: 10px; background: white; color: var(--ui-purple); font-size: var(--font-secondary); font-weight: 700; cursor: pointer; }
+  .notification-section-title { margin-bottom: 16px; }
+  .notification-section-title > span { display: block; color: var(--ui-muted); font-size: var(--font-meta); letter-spacing: 1px; font-weight: 700; margin-bottom: 6px; }
+  .notification-list { display: grid; gap: 12px; }
+  .notification-card { display: flex; gap: 18px; padding: 22px 24px; border: 1px solid var(--ui-border); border-radius: var(--ui-radius); background: white; }
+  .notification-card.unread { border-left: 3px solid var(--ui-purple); padding-left: 22px; background: var(--ui-purple-faint); }
+  .notification-icon { display: grid; place-items: center; width: 44px; height: 44px; flex-shrink: 0; border-radius: 12px; background: var(--ui-purple-soft); color: var(--ui-purple); font-size: var(--font-section); font-weight: 700; }
+  .notification-icon.payment, .notification-icon.delivery { background: #eaf6ef; color: #26764f; }
+  .notification-icon.system { background: #f0edf4; color: var(--ui-muted); }
+  .notification-content { flex: 1; min-width: 0; }
+  .notification-title-row { display: flex; align-items: center; gap: 10px; }
+  .notification-title-row strong { font-size: var(--font-body); }
+  .unread-dot { flex-shrink: 0; width: 7px; height: 7px; border-radius: 50%; background: var(--ui-purple); }
+  .notification-content > p { margin: 6px 0 10px; color: var(--ui-muted); font-size: var(--font-secondary); }
+  .notification-bottom { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+  .notification-bottom small { font-size: var(--font-meta); color: var(--ui-muted); }
+  .notification-bottom button { display: inline-flex; align-items: center; gap: 8px; min-height: 32px; padding: 4px 0; border: 0; background: none; color: var(--ui-purple); font-size: var(--font-meta); font-weight: 700; cursor: pointer; }
+  .notification-bottom button:hover { text-decoration: underline; }
+}
+@media (max-width: 600px) { .notifications-page .notification-summary { flex-wrap: wrap; padding: 20px; } .notifications-page .notification-card { gap: 12px; padding: 18px; } .notifications-page .notification-card.unread { padding-left: 16px; } .notifications-page .notification-icon { width: 36px; height: 36px; } }
+@media (min-width: 1100px) {
+  .notifications-page .notification-content { display: grid; grid-template-columns: minmax(0, 1fr) auto; column-gap: 24px; }
+  .notifications-page .notification-title-row, .notifications-page .notification-content > p { grid-column: 1; }
+  .notifications-page .notification-content > p { margin-bottom: 0; }
+  .notifications-page .notification-bottom { grid-column: 2; grid-row: 1 / span 2; flex-direction: column; align-items: flex-end; gap: 4px; }
+}
+
+
+.notifications-header-layout { display: flex; flex-direction: column; gap: 16px; margin-bottom: 24px; } .notifications-header-actions { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+
+

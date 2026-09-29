@@ -1,0 +1,234 @@
+/* Shared Trip Page Styles */
+.trip-page {
+  width: 100%;
+  padding: 32px 24px 48px;
+  background: var(--bg-body, #f4f6fb);
+  min-height: calc(100vh - 72px);
+  color: var(--ui-text);
+  font-family: var(--font-family);
+}
+
+.trip-container {
+  width: 100%;
+  max-width: 980px;
+  margin: 0 auto;
+}
+
+/* Header */
+.trip-header {
+  margin-bottom: 24px;
+}
+
+.trip-back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: transparent;
+  border: none;
+  color: var(--ui-muted);
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+  margin-bottom: 24px;
+}
+
+.trip-back-btn:hover {
+  color: var(--ui-purple);
+}
+
+.trip-eyebrow {
+  display: block;
+  font-size: 12px;
+  text-transform: uppercase;
+  color: var(--ui-purple);
+  font-weight: 700;
+  letter-spacing: 1px;
+  margin-bottom: 8px;
+}
+
+.trip-header h1 {
+  font-size: 30px;
+  font-weight: 700;
+  margin: 0 0 8px 0;
+  color: var(--ui-text);
+  line-height: 1.2;
+}
+
+.trip-header p {
+  font-size: 15px;
+  color: var(--ui-secondary, #6b7280);
+  margin: 0;
+}
+
+/* Delivery Summary Card */
+.delivery-summary-card {
+  background: white;
+  border: 1px solid #E6DFF0;
+  border-radius: 16px;
+  padding: 24px;
+  margin-bottom: 24px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.02);
+}
+
+.delivery-info-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+}
+
+.delivery-info-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.delivery-info-item.row-item {
+  display: grid;
+  grid-template-columns: 140px 1fr;
+  align-items: baseline;
+  gap: 16px;
+}
+
+.delivery-info-item small {
+  font-size: 13px;
+  color: var(--ui-secondary);
+}
+
+.delivery-info-item strong {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--ui-text);
+}
+
+.delivery-info-item p {
+  margin: 4px 0 0 0;
+  font-size: 14px;
+  color: var(--ui-secondary);
+}
+
+.delivery-info-item.earnings strong {
+  font-size: 18px;
+  color: var(--ui-purple);
+}
+
+/* Divider */
+.delivery-divider {
+  height: 1px;
+  background: #E6DFF0;
+  margin: 20px 0;
+}
+
+/* Action Area */
+.delivery-action-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 32px;
+}
+
+.btn-delivery-primary {
+  min-width: 220px;
+  height: 48px;
+  background: var(--ui-purple);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.2s;
+  padding: 0 24px;
+}
+
+.btn-delivery-primary:hover {
+  background: var(--ui-purple-accent);
+}
+
+.btn-delivery-secondary {
+  min-width: 220px;
+  height: 48px;
+  background: white;
+  border: 1px solid #E6DFF0;
+  color: var(--ui-text);
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.2s;
+  padding: 0 24px;
+}
+
+.btn-delivery-secondary:hover {
+  background: #fdfcff;
+  border-color: var(--ui-purple);
+}
+
+.btn-delivery-success {
+  min-width: 220px;
+  height: 48px;
+  background: #22c55e;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.2s;
+  padding: 0 24px;
+}
+
+.btn-delivery-success:hover {
+  background: #16a34a;
+}
+
+@media (max-width: 768px) {
+  .trip-page {
+    padding: 16px;
+  }
+  
+  .trip-header h1 {
+    font-size: 24px;
+  }
+  
+  .delivery-summary-card {
+    padding: 16px;
+  }
+  
+  .delivery-info-item.row-item {
+    grid-template-columns: 1fr;
+    gap: 4px;
+  }
+  
+  .delivery-action-footer {
+    flex-direction: column;
+  }
+  
+  .delivery-action-footer button {
+    width: 100%;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  .trip-container {
+    max-width: 760px;
+  }
+}
+
+@media (min-width: 1025px) {
+  .trip-container {
+    max-width: 900px;
+  }
+}

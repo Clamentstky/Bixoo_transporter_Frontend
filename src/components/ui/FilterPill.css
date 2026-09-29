@@ -1,0 +1,58 @@
+.bixoo-filter-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 38px;
+  padding: 0 16px;
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 600;
+  border: 1px solid #E5E0EC;
+  background: white;
+  color: var(--ui-muted);
+  cursor: pointer;
+  transition: all 150ms ease;
+  font-family: inherit;
+  outline: none;
+}
+
+.bixoo-filter-pill:hover {
+  background: var(--ui-purple-faint);
+  color: var(--ui-purple);
+  border-color: var(--ui-purple-soft);
+}
+
+.bixoo-filter-pill:focus-visible {
+  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.18);
+}
+
+.bixoo-filter-pill.active {
+  background: var(--ui-purple);
+  color: white;
+  border-color: var(--ui-purple);
+  box-shadow: 0 2px 4px rgba(112, 64, 189, 0.2);
+}
+
+.filter-pill-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 6px;
+  background: rgba(255, 255, 255, 0.2);
+  color: inherit;
+  border-radius: 999px;
+  padding: 2px 6px;
+  font-size: 12px;
+}
+
+.bixoo-filter-pill:not(.active) .filter-pill-count {
+  background: var(--ui-purple-soft);
+  color: var(--ui-purple);
+}
+
+.filter-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}

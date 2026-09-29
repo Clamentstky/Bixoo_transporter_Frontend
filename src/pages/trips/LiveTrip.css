@@ -1,0 +1,260 @@
+/* Shared Trip Page Styles */
+.trip-page {
+  width: 100%;
+  padding: 32px 24px 48px;
+  background: var(--bg-body, #f4f6fb);
+  min-height: calc(100vh - 72px);
+  color: var(--ui-text);
+  font-family: var(--font-family);
+}
+
+.trip-container {
+  width: 100%;
+  max-width: 980px;
+  margin: 0 auto;
+}
+
+/* Header */
+.trip-header {
+  margin-bottom: 24px;
+}
+
+.trip-back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: transparent;
+  border: none;
+  color: var(--ui-muted);
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+  margin-bottom: 24px;
+}
+
+.trip-back-btn:hover {
+  color: var(--ui-purple);
+}
+
+.trip-eyebrow {
+  display: block;
+  font-size: 12px;
+  text-transform: uppercase;
+  color: var(--ui-purple);
+  font-weight: 700;
+  letter-spacing: 1px;
+  margin-bottom: 8px;
+}
+
+.trip-header h1 {
+  font-size: 30px;
+  font-weight: 700;
+  margin: 0 0 8px 0;
+  color: var(--ui-text);
+  line-height: 1.2;
+}
+
+.trip-header p {
+  font-size: 15px;
+  color: var(--ui-secondary, #6b7280);
+  margin: 0;
+}
+
+/* Cards */
+.trip-card {
+  background: white;
+  border: 1px solid #E6DFF0;
+  border-radius: 16px;
+  padding: 22px;
+  margin-bottom: 24px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.02);
+}
+
+/* Route Timeline */
+.route-timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  position: relative;
+  margin-bottom: 24px;
+}
+
+.route-timeline::before {
+  content: '';
+  position: absolute;
+  left: 7px;
+  top: 20px;
+  bottom: 20px;
+  width: 2px;
+  background: #E6DFF0;
+  z-index: 1;
+}
+
+.route-point {
+  display: grid;
+  grid-template-columns: 28px 1fr;
+  gap: 10px;
+  position: relative;
+  z-index: 2;
+}
+
+.route-dot {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: white;
+  border: 3px solid var(--ui-purple);
+  margin-top: 2px;
+}
+
+.route-dot.pickup {
+  background: white;
+}
+
+.route-dot.delivery {
+  background: var(--ui-purple);
+}
+
+.route-content small {
+  display: block;
+  font-size: 13px;
+  color: var(--ui-secondary);
+  margin-bottom: 4px;
+}
+
+.route-content strong {
+  display: block;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--ui-text);
+}
+
+.route-content p {
+  margin: 4px 0 0;
+  font-size: 14px;
+  color: var(--ui-secondary);
+}
+
+/* Distance Area */
+.trip-distance-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 18px;
+  border-top: 1px solid #E6DFF0;
+}
+
+.trip-distance-row span {
+  font-size: 14px;
+  color: var(--ui-secondary);
+}
+
+.trip-distance-row strong {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--ui-text);
+}
+
+/* Info Grid */
+.trip-info-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px 28px;
+}
+
+.info-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.info-item small {
+  font-size: 13px;
+  color: var(--ui-secondary);
+}
+
+.info-item strong {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--ui-text);
+}
+
+/* Actions */
+.trip-action-area {
+  display: grid;
+  grid-template-columns: 1fr 1.4fr;
+  gap: 12px;
+  margin-top: 32px;
+}
+
+.trip-action-area .btn-secondary {
+  height: 48px;
+  background: white;
+  border: 1px solid #E6DFF0;
+  color: var(--ui-text);
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.2s;
+}
+
+.trip-action-area .btn-secondary:hover {
+  background: #fdfcff;
+  border-color: var(--ui-purple);
+}
+
+.trip-action-area .btn-primary {
+  height: 48px;
+  background: var(--ui-purple);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.2s;
+}
+
+.trip-action-area .btn-primary:hover {
+  background: var(--ui-purple-accent);
+}
+
+@media (max-width: 768px) {
+  .trip-page {
+    padding: 16px;
+  }
+  
+  .trip-header h1 {
+    font-size: 24px;
+  }
+  
+  .trip-info-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .trip-action-area {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  .trip-container {
+    max-width: 760px;
+  }
+}
+
+@media (min-width: 1025px) {
+  .trip-container {
+    max-width: 900px;
+  }
+}

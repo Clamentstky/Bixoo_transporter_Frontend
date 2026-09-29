@@ -1,0 +1,37 @@
+const paths = {
+  chat: <path d="M21 4H3v13h5l4 4 4-4h5V4ZM7 9h10M7 13h6" />,
+  star: <path d="m12 3 2.8 5.7 6.2.9-4.5 4.4 1.1 6.2-5.6-3-5.6 3 1.1-6.2L3 9.6l6.2-.9L12 3Z" />,
+  calendar: <><rect x="3" y="5" width="18" height="16" rx="2" /><path d="M7 3v4m10-4v4M3 11h18m-13 4h3m3 0h3" /></>,
+  document: <><path d="M14 3H5v18h14V8l-5-5Zm0 0v5h5M8 12h8M8 16h6" /></>,
+  camera: <><path d="M8 6 9 3h6l1 3h5v15H3V6h5Z" /><circle cx="12" cy="13" r="4" /></>,
+  arrowLeft: <path d="M20 12H4m6-6-6 6 6 6" />,
+  close: <path d="m6 6 12 12M6 18 18 6" />,
+  upload: <><path d="M12 16V3m-5 5 5-5 5 5M4 16v5h16v-5" /></>,
+  send: <path d="m3 3 18 9-18 9 3-9-3-9Zm3 9h15" />,
+  plus: <path d="M12 4v16M4 12h16" />,
+  dashboard: <><rect x="3" y="3" width="7" height="7" rx="1.5" /><rect x="14" y="3" width="7" height="7" rx="1.5" /><rect x="3" y="14" width="7" height="7" rx="1.5" /><rect x="14" y="14" width="7" height="7" rx="1.5" /></>,
+  loads: <><path d="m12 3 9 5-9 5-9-5 9-5Z" /><path d="M3 8v9l9 5 9-5V8M12 13v9M7.5 5.5l9 5" /></>,
+  truck: <><path d="M3 6h11v11H3zM14 10h4l3 4v3h-7" /><circle cx="7" cy="18" r="2" /><circle cx="18" cy="18" r="2" /></>,
+  wallet: <><path d="M20 8V5H5a2 2 0 0 0 0 4h16v11H5a2 2 0 0 1-2-2V7" /><path d="M21 12h-6v5h6M17 14.5h.01" /></>,
+  bell: <><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4" /></>,
+  user: <><circle cx="12" cy="8" r="4" /><path d="M4 21v-2a8 8 0 0 1 16 0v2" /></>,
+  search: <><circle cx="10.5" cy="10.5" r="7" /><path d="m16 16 5 5" /></>,
+  arrow: <path d="M4 12h16m-6-6 6 6-6 6" />,
+  chevron: <path d="m8 10 4 4 4-4" />,
+  menu: <path d="M4 6h16M4 12h16M4 18h16" />,
+  logout: <><path d="M10 4H4v16h6M10 12h11m-4-4 4 4-4 4" /></>,
+  pin: <><path d="M19 10c0 5-7 11-7 11S5 15 5 10a7 7 0 0 1 14 0Z" /><circle cx="12" cy="10" r="2" /></>,
+  clock: <><circle cx="12" cy="12" r="9" /><path d="M12 7v5l3 2" /></>,
+  check: <path d="m5 12 4 4L19 6" />,
+  edit: <><path d="m15 4 5 5M4 20l5-1L21 7l-5-5L4 14v6Z" /></>,
+  shield: <><path d="m12 3 8 3v6c0 5-8 9-8 9s-8-4-8-9V6l8-3Z" /><path d="m8 12 3 3 5-6" /></>,
+  help: <><circle cx="12" cy="12" r="9" /><path d="M9 9a3 3 0 0 1 6 0c0 2-3 2-3 5M12 17h.01" /></>,
+  phone: <path d="m7 3 3 5-3 3a13 13 0 0 0 6 6l3-3 5 3c-1 5-5 5-9 3S4 14 3 10 3 4 7 3Z" />,
+  spinner: <path d="M12 3a9 9 0 0 0-9 9m9-9a9 9 0 0 1 9 9m-9-9v3m0 12v3m9-9h3M3 12H0m19.364-7.364 2.121-2.121M2.515 21.485l2.121-2.121m14.728 0 2.121 2.121M2.515 2.515l2.121 2.121" />,
+  eye: <><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" /><circle cx="12" cy="12" r="3" /></>,
+  "eye-off": <><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24" /><path d="M1 1l22 22" /></>,
+};
+
+export default function Icon({ name, size = 20, ...props }) {
+  return <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" {...props}>{paths[name] || paths.loads}</svg>;
+}
