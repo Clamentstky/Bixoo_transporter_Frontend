@@ -15,6 +15,7 @@ function Dashboard() {
   const { user } = useAuth();
   const profile = { name: user?.name };
   const [stats, setStats] = useState({
+    active_trips: 0,
     available_loads: 0,
     today_available: 0,
     today_completed: 0,
@@ -81,8 +82,8 @@ function Dashboard() {
       
       <section className="ui-stats-grid dashboard-stats" aria-label="Operational statistics">
         <StatCard icon="loads" label="Available Loads" value={stats.available_loads.toString()} detail="Freight opportunities" />
-        <StatCard icon="truck" label="Active Trips" value={activeTrip ? "1" : "0"} detail="Your current journey" />
-        <StatCard icon="check" label="Today's Completed" value={stats.today_completed.toString()} detail="Completed deliveries" />
+        <StatCard icon="truck" label="Active Trips" value={(stats.active_trips ?? 0).toString()} detail="Your current journeys" />
+        <StatCard icon="check" label="Completed Trips" value={stats.total_completed.toString()} detail="Completed deliveries" />
         <StatCard icon="wallet" label="Pending Settlement" value={`₹${stats.pending_settlement.toLocaleString()}`} detail="Current pending balance" />
       </section>
 

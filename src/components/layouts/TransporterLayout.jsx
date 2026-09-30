@@ -12,7 +12,6 @@ function TransporterLayout() {
   const { user, logout } = useAuth();
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [search, setSearch] = useState("");
   const sidebarRef = useRef(null);
   const menuRef = useRef(null);
   const [compact, setCompact] = useState(() => window.matchMedia("(max-width: 1000px)").matches);
@@ -255,21 +254,6 @@ function TransporterLayout() {
           >
             <Icon name="menu" />
           </button>
-
-          <form className="header-search" role="search" onSubmit={(event) => {
-            event.preventDefault();
-            navigate(`/loads${search.trim() ? `?q=${encodeURIComponent(search.trim())}` : ""}`);
-          }}>
-            <Icon name="search" size={18} />
-
-            <input
-              type="search"
-              aria-label="Search loads"
-              placeholder="Search loads or locations..."
-              value={search}
-              onChange={(event) => setSearch(event.target.value)}
-            />
-          </form>
 
           <div className="header-right">
 

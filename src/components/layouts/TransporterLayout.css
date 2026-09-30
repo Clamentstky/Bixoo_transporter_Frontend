@@ -27,10 +27,7 @@
 .sidebar-logout:hover { background: #fcf0f2; }
 .layout-main { width: calc(100% - var(--sidebar-width)); min-width: 0; margin-left: var(--sidebar-width); }
 .transporter-header { height: var(--header-height); position: sticky; top: 0; z-index: 90; display: flex; justify-content: space-between; align-items: center; gap: 24px; padding: 0 var(--page-padding); background: white; border-bottom: 1px solid var(--ui-border); }
-.header-search { display: flex; align-items: center; gap: 10px; width: min(380px, 40%); min-height: 44px; padding: 0 14px; border: 1px solid var(--ui-border); border-radius: 10px; background: #faf9fc; color: var(--ui-muted); }
-.header-search:focus-within { border-color: var(--ui-purple); }
-.header-search input { min-width: 0; width: 100%; border: 0; outline: none; background: transparent; color: var(--ui-text); font-size: var(--font-secondary); }
-.header-right { display: flex; align-items: center; gap: 16px; }
+.header-right { display: flex; align-items: center; gap: 16px; margin-left: auto; }
 .header-notification { display: grid; place-items: center; position: relative; width: 44px; height: 44px; border: 1px solid var(--ui-border); border-radius: 10px; background: white; color: var(--ui-muted); cursor: pointer; }
 .header-notification > span { position: absolute; top: 8px; right: 9px; width: 6px; height: 6px; border-radius: 50%; background: var(--ui-purple); }
 .header-status { display: flex; align-items: center; gap: 8px; min-height: 44px; padding: 8px 12px; border: 0; border-radius: 20px; font-size: var(--font-meta); font-weight: 700; cursor: pointer; }
@@ -52,12 +49,11 @@
   .layout-main { width: 100%; margin-left: 0; }
   .mobile-menu-btn { display: grid; }
   .transporter-header { gap: 16px; }
-  .header-search { flex: 1; width: auto; }
 }
 @media (max-width: 768px) {
   .transporter-header { height: 72px; padding: 12px 16px; }
-  .header-search, .header-user { display: none; }
-  .header-right { margin-left: auto; gap: 10px; }
+  .header-user { display: none; }
+  .header-right { gap: 10px; }
   .header-profile { padding-left: 0; border-left: none; }
   .layout-content { min-height: calc(100vh - 72px); }
   .header-status { min-height: 40px; padding: 6px 12px; }
