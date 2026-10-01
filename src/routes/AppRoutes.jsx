@@ -18,6 +18,8 @@ import LoadDetails from "../pages/loads/LoadDetails";
 import MyTrips from "../pages/trips/MyTrips";
 import TripDetails from "../pages/trips/TripDetails";
 import LiveTrip from "../pages/trips/LiveTrip";
+import SharedLocation from "../pages/trips/SharedLocation";
+import { LocationTrackingProvider } from "../context/LocationTrackingContext";
 import TripChat from "../pages/trips/TripChat";
 import Delivery from "../pages/trips/Delivery";
 import TripDocuments from "../pages/trips/TripDocuments";
@@ -56,9 +58,11 @@ function AppRoutes() {
           {/* Authentication */}
           <Route path="/login" element={<Login />} />
           <Route path="/onboarding" element={<Onboarding />} />
+          <Route path="/shared-location" element={<SharedLocation />} />
 
           {/* Transporter Application */}
           <Route element={<ProtectedRoute />}>
+            <Route element={<LocationTrackingProvider />}>
             <Route element={<TransporterLayout />}>
               
               {/* Dashboard */}
@@ -95,6 +99,7 @@ function AppRoutes() {
               <Route path="/help" element={<HelpCenter />} />
               <Route path="/support" element={<ContactSupport />} />
               <Route path="/faqs" element={<FAQs />} />
+            </Route>
             </Route>
           </Route>
 

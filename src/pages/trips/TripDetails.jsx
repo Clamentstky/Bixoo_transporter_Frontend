@@ -4,6 +4,8 @@ import Icon from "../../components/Icon";
 import api from "../../services/api";
 import EmptyState from "../../components/ui/EmptyState";
 import Button from "../../components/ui/Button";
+import LiveLocationPanel from "../../components/location/LiveLocationPanel";
+import { ACTIVE_TRIP_STATUSES } from "../../context/LocationTrackingContext";
 import "./TripDetails.css";
 
 function TripDetails() {
@@ -71,7 +73,7 @@ function TripDetails() {
   }
 
   const { request } = trip;
-  const isCompleted = trip.status === "COMPLETED" || trip.status === "DELIVERED";
+  const isCompleted = !ACTIVE_TRIP_STATUSES.includes(trip.status);
 
   return (
     <div className="trip-details-page">
@@ -126,18 +128,7 @@ function TripDetails() {
       </section>
 
       {!isCompleted && (
-        <section className="trip-map-card">
-          <div className="trip-map-header">
-            <div>
-              <span>LIVE ROUTE</span>
-              <h2>Trip Tracking</h2>
-            </div>
-            <span className="gps-live"><i></i>Live</span>
-          </div>
-          <div className="trip-map" style={{ height: '150px', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#f5f5f5', borderRadius: '8px', border: '1px solid #eaeaea', position: 'relative' }}>
-            <p style={{ color: 'var(--text-muted)' }}>Map visualization active when navigating</p>
-          </div>
-        </section>
+        <LiveLocationPanel key={tripId} tripId={tripId} readOnly />
       )}
 
       <section className="trip-section">

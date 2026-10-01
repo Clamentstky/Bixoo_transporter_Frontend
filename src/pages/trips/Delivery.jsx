@@ -4,6 +4,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import api from "../../services/api";
 import EmptyState from "../../components/ui/EmptyState";
 import Button from "../../components/ui/Button";
+import { errorMessage } from "../../services/session";
 import "./Delivery.css";
 
 function Delivery() {
@@ -13,14 +14,19 @@ function Delivery() {
   const [deliveryStatus, setDeliveryStatus] = useState("Arriving");
   const [trip, setTrip] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const [updating, setUpdating] = useState(false);
 
   useEffect(() => {
     const fetchTrip = async () => {
       try {
         const res = await api.get(`/transporter/trips/${tripId}`);
-        if (res.data) setTrip(res.data);
+        if (res.data) {
+          setTrip(res.data);
+          setDeliveryStatus(({ AT_DELIVERY: "Arrived", DELIVERED: "Unloading", COMPLETED: "Delivered" })[res.data.status] || "Arriving");
+        }
       } catch (err) {
-        console.error(err);
+        setError(errorMessage(err));
       } finally {
         setLoading(false);
       }
@@ -30,7 +36,8 @@ function Delivery() {
 
   // Helper to safely advance the backend state machine without 400 Bad Request errors
   const advanceStatusTo = async (targetStatus) => {
-    if (!trip) return;
+    if (!trip || updating) return false;
+    setUpdating(true); setError("");
     const flow = ["ACCEPTED", "GOING_TO_PICKUP", "PICKED_UP", "IN_TRANSIT", "AT_DELIVERY", "DELIVERED", "COMPLETED"];
     try {
       let current = trip.status;
@@ -41,26 +48,25 @@ function Delivery() {
         const nextStatus = flow[flow.indexOf(current) + 1];
         const res = await api.patch(`/transporter/trips/${tripId}/status`, { status: nextStatus });
         current = nextStatus;
-        setTrip(res.data); // Keep local state in sync
+        setTrip(previous => ({ ...previous, ...res.data }));
       }
+      return current === targetStatus;
     } catch (err) {
-      console.error(`Failed to advance trip status to ${targetStatus}:`, err);
-    }
+      setError(errorMessage(err, "Unable to update delivery status. Tracking has not been stopped by this action."));
+      return false;
+    } finally { setUpdating(false); }
   };
 
   const handleArrived = async () => {
-    setDeliveryStatus("Arrived");
-    await advanceStatusTo("AT_DELIVERY");
+    if (await advanceStatusTo("AT_DELIVERY")) setDeliveryStatus("Arrived");
   };
 
   const handleStartUnloading = async () => {
-    setDeliveryStatus("Unloading");
-    await advanceStatusTo("DELIVERED"); // Delivered implies we reached the location and unloaded
+    if (await advanceStatusTo("DELIVERED")) setDeliveryStatus("Unloading");
   };
 
   const handleCompleteDelivery = async () => {
-    setDeliveryStatus("Delivered");
-    await advanceStatusTo("COMPLETED");
+    if (await advanceStatusTo("COMPLETED")) setDeliveryStatus("Delivered");
   };
 
   const handleFinish = () => {
@@ -72,7 +78,7 @@ function Delivery() {
   };
 
   if (loading) return <div className="trip-page"><p style={{ padding: "20px" }}>Loading...</p></div>;
-  if (!trip) return <div className="trip-page"><EmptyState title="Trip not found" description="This delivery does not exist." /><div style={{textAlign: "center", padding: "20px"}}><Button variant="secondary" onClick={() => navigate(-1)}>Go Back</Button></div></div>;
+  if (!trip) return <div className="trip-page"><EmptyState title="Trip unavailable" description={error || "This delivery does not exist."} /><div style={{textAlign: "center", padding: "20px"}}><Button variant="secondary" onClick={() => navigate(-1)}>Go Back</Button></div></div>;
 
   let displayStatus = "Arriving at Destination";
   if (deliveryStatus === "Arrived") displayStatus = "Arrived at Destination";
@@ -82,6 +88,8 @@ function Delivery() {
   return (
     <div className="trip-page">
       <div className="trip-container">
+        {error && <p role="alert" className="location-warning">{error}</p>}
+        {updating && <p role="status">Saving delivery status…</p>}
         
         <button className="trip-back-btn" onClick={() => navigate(-1)}>
           <Icon name="arrowLeft" size={18} /> Back
@@ -131,12 +139,12 @@ function Delivery() {
         
         <div className="delivery-action-footer">
           {deliveryStatus === "Arriving" && (
-            <button className="btn-delivery-primary" onClick={handleArrived}>
+            <button className="btn-delivery-primary" disabled={updating} onClick={handleArrived}>
               Confirm Arrival
             </button>
           )}
           {deliveryStatus === "Arrived" && (
-            <button className="btn-delivery-primary" onClick={handleStartUnloading}>
+            <button className="btn-delivery-primary" disabled={updating} onClick={handleStartUnloading}>
               Start Unloading
             </button>
           )}
@@ -145,7 +153,7 @@ function Delivery() {
               <button className="btn-delivery-secondary" onClick={handleUploadDocs}>
                 <Icon name="upload" size={18} /> Upload Documents
               </button>
-              <button className="btn-delivery-primary" onClick={handleCompleteDelivery}>
+              <button className="btn-delivery-primary" disabled={updating} onClick={handleCompleteDelivery}>
                 Complete Delivery
               </button>
             </>

@@ -6,7 +6,7 @@ import { clearAccountCache, clearSession, errorMessage, storeTokens } from "../s
 const AuthContext = createContext(null);
 export function AuthProvider({ children }) {
   const { pathname } = useLocation();
-  const publicPage = pathname === "/" || pathname === "/login" || pathname === "/onboarding";
+  const publicPage = pathname === "/" || pathname === "/login" || pathname === "/onboarding" || pathname === "/shared-location";
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -61,12 +61,20 @@ export function AuthProvider({ children }) {
   };
   const logout = async () => {
     ++sessionVersion.current;
+    let locationNotice = "";
+    let locationTask;
+    try { locationTask = JSON.parse(sessionStorage.getItem(`bixoo_location_${user?.id}`)); } catch { /* Browser storage may be unavailable. */ }
+    window.dispatchEvent(new Event("location:stop-local"));
+    if (Number.isInteger(locationTask?.tripId)) {
+      try { await api.delete(`/transporter/trips/${locationTask.tripId}/tracking`); }
+      catch { locationNotice = " GPS collection stopped, but the server could not revoke the location link. It will expire automatically."; }
+    }
     const token = localStorage.getItem("refresh_token");
     clearSession(); setUser(null); setError(""); setSessionNotice(""); setLoading(false);
     try {
       if (token) await api.post("/auth/logout", { refresh_token: token }, { skipAuth: true });
-      return "You have signed out.";
-    } catch { return "Signed out on this device. The server could not be reached to revoke the session."; }
+      return `You have signed out.${locationNotice}`;
+    } catch { return `Signed out on this device. The server could not be reached to revoke the session.${locationNotice}`; }
   };
   return <AuthContext.Provider value={{ user, loading, error, sessionNotice, login, logout, restoreSession }}>{children}</AuthContext.Provider>;
 }

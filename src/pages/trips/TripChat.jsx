@@ -118,8 +118,9 @@ function TripChat() {
       <div className="chat-input-area" style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
         <Button 
           variant="ghost" 
-          icon="plus" 
-          aria-label="Attach file" 
+          icon="pin"
+          aria-label="Open live location and sharing"
+          onClick={() => navigate(`/trips/${tripId}/live`)}
           style={{ padding: "8px", width: "42px", height: "42px", borderRadius: "10px" }}
         />
 

@@ -1,0 +1,76 @@
+.location-panel { display: block; width: 100%; min-width: 0; margin: 0; padding: 0; border: 1px solid #e8e2ee; border-radius: 18px; background: white; box-shadow: 0 4px 20px #39255204; color: #302539; container-type: inline-size; }
+.location-panel-heading { display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 20px 24px; }
+.location-panel-title { display: flex; align-items: center; gap: 11px; min-width: 0; }
+.location-heading-icon { display: grid; place-items: center; width: 38px; height: 38px; border-radius: 11px; background: #f2ebfa; color: #8858b7; flex-shrink: 0; }
+.location-panel-title h2 { margin: 0; font-size: 16px; font-weight: 650; letter-spacing: -.2px; }
+.location-panel-title p { margin: 2px 0 0; color: #958a9f; font-size: 11px; }
+.location-refresh { display: inline-flex; align-items: center; gap: 6px; font-size: 10px; color: #9b8da5; white-space: nowrap; }
+.location-map-content { display: block; width: 100%; min-width: 0; }
+.location-map-frame { position: relative; margin: 0 10px; min-width: 0; border: 1px solid #eee9f2; border-radius: 12px; overflow: hidden; background: #f1f1f4; }
+.location-map { display: block; width: 100%; height: 380px; border: 0; margin: 0; }
+.location-fix-status { position: absolute; z-index: 1; top: 14px; left: 14px; display: inline-flex; align-items: center; gap: 7px; max-width: calc(100% - 75px); margin: 0; padding: 8px 11px; border: 1px solid #e8e9e2; border-radius: 8px; background: #fffffff5; box-shadow: 0 2px 8px #00000008; font-size: 12px; font-weight: 600; pointer-events: none; }
+.location-fix-status i { display: block; width: 6px; height: 6px; border-radius: 50%; background: currentColor; flex-shrink: 0; }
+.location-fix-status.is-current { color: #358064; }
+.location-fix-status.is-stale { color: #946a33; }
+.location-map-loading { position: absolute; left: 14px; bottom: 14px; max-width: calc(100% - 28px); z-index: 1; margin: 0; padding: 8px 12px; background: #ffffffee; color: #84718f; border-radius: 8px; font-size: 11px; pointer-events: none; }
+.location-map-caption { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 13px 24px 15px; font-size: 10px; color: #a093aa; }
+.location-map-caption a, .location-actions a { display: inline-flex; align-items: center; gap: 6px; color: #8657ad; text-decoration: none; font-weight: 600; flex-shrink: 0; }
+.location-map-caption a:hover, .location-actions a:hover { text-decoration: underline; }
+.location-map-caption a svg { transform: rotate(-45deg); }
+.location-details { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px 24px; margin: 0 24px 22px; padding: 18px 20px; border: 1px solid #eee8f4; border-radius: 12px; background: #faf8fc; }
+.location-details > div { min-width: 0; }
+.location-details dt { color: #9c8aaa; font-size: 10px; margin: 0 0 6px; }
+.location-details dd { margin: 0; color: #645071; font-size: 13px; font-weight: 600; line-height: 1.6; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.location-details dd small { display: block; font-weight: 400; font-size: 10px; color: #a18eaf; }
+.location-control-section { padding: 20px 24px 24px; border-top: 1px solid #f0ebf5; }
+.location-control-heading { display: flex; align-items: center; flex-wrap: wrap; justify-content: space-between; gap: 10px; }
+.location-control-heading h3 { font-size: 13px; font-weight: 600; margin: 0; }
+.location-control-heading > span { color: #9988a5; font-size: 10px; }
+.location-panel .location-notice { margin: 10px 0 0; font-size: 11px; line-height: 1.6; color: #8d7d98; overflow-wrap: anywhere; }
+.location-panel > .location-notice { padding: 0 24px 16px; margin: 0; }
+.location-warning { color: #8a3511; background: #fff1e7; border-radius: 8px; padding: 12px; font-size: 13px; line-height: 1.6; overflow-wrap: anywhere; }
+.location-panel > .location-warning { margin: 0 20px 16px; }
+.location-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 9px; margin: 17px 0; }
+.location-actions button, .location-banner button { display: inline-flex; align-items: center; justify-content: center; gap: 7px; border: 1px solid #e1d6ec; border-radius: 9px; background: white; color: #816294; padding: 10px 13px; min-height: 44px; cursor: pointer; font: inherit; font-size: 11px; font-weight: 600; }
+.location-actions button:hover:enabled { background: #f7f1fc; border-color: #cbb5df; }
+.location-actions .location-share-button { color: white; background: #8650b9; border-color: #8650b9; margin-left: auto; }
+.location-actions .location-share-button:hover:enabled { background: #7540a6; border-color: #7540a6; }
+.location-actions .location-stop-button { color: #9c637d; border-color: #ebd8e1; }
+.location-stop-icon { width: 8px; height: 8px; border: 1.5px solid currentColor; border-radius: 2px; }
+.location-actions button:disabled, .location-banner button:disabled { opacity: .48; cursor: not-allowed; }
+.location-actions button:focus-visible, .location-share input:focus-visible { outline: 3px solid #8054c9; outline-offset: 3px; }
+.location-device-note { display: flex; align-items: flex-start; gap: 9px; padding: 13px 14px; background: #faf8fc; border: 1px solid #f0eaf6; border-radius: 9px; color: #aa98b7; }
+.location-device-note svg { margin-top: 2px; }
+.location-device-note p { margin: 0; font-size: 10px; line-height: 1.7; color: #94809f; }
+.location-share-expiry { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; margin-top: 20px; color: #927e9f; font-size: 11px; }
+.location-share-expiry span { display: inline-flex; align-items: center; gap: 7px; }
+.location-share-expiry button { border: 0; background: transparent; padding: 8px 0; color: #a65873; font-size: 11px; cursor: pointer; }
+.location-share { margin-top: 20px; padding-top: 18px; border-top: 1px solid #eee5f5; }
+.location-share label { font-size: 12px; font-weight: 600; }
+.location-share input { display: block; box-sizing: border-box; width: 100%; min-width: 0; padding: 12px; margin-top: 9px; border: 1px solid #e4d7ef; border-radius: 9px; font-size: 12px; color: #74637f; background: #fcfafd; }
+.location-share .location-actions { margin-bottom: 0; font-size: 11px; }
+.location-empty { min-height: 320px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; margin: 0 10px 20px; padding: 32px 24px; text-align: center; border: 1px dashed #e4d7ee; border-radius: 12px; background: #faf8fc; }
+.location-empty > span { display: grid; place-items: center; width: 68px; height: 68px; border: 1px solid #e6d9f0; border-radius: 50%; background: #f0e8f7; color: #9d77b9; margin-bottom: 8px; }
+.location-empty h3 { margin: 0; font-size: 16px; font-weight: 600; }
+.location-empty p { max-width: 270px; margin: 0; font-size: 12px; line-height: 1.7; color: #927e9f; }
+.location-empty small { color: #a594b1; font-size: 10px; }
+.location-recipient-panel { padding-block: 20px; }
+.location-recipient-panel > p { margin: 12px 24px; }
+.location-banner { display: flex; align-items: center; flex-wrap: wrap; gap: 12px; margin-left: var(--sidebar-width, 248px); padding: 10px 24px; background: #eee6f7; border-bottom: 1px solid #e2d7eb; color: #7f6095; font-size: 11px; overflow-wrap: anywhere; }
+.location-banner a { color: #7648a4; font-weight: 600; text-decoration: none; }
+.location-banner span { flex: 1 1 250px; }
+.location-banner button { min-height: 34px; padding: 6px 12px; font-size: 11px; }
+@container (min-width: 680px) { .location-details { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+@container (max-width: 480px) { .location-panel-heading { flex-wrap: wrap; padding: 18px; } .location-map-caption { flex-wrap: wrap; padding: 12px 18px; } .location-details { margin: 0 16px 18px; gap: 16px 14px; padding: 16px; } .location-control-section { padding: 18px; } .location-actions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); } .location-actions .location-share-button { grid-column: 1 / -1; margin: 0; } .location-actions button { padding: 10px 6px; font-size: 11px; } .location-share .location-actions a { grid-column: 1 / -1; } }
+@media (max-width: 1000px) { .location-banner { margin-left: 0; padding: 12px 16px; } }
+@media (max-width: 600px) { .location-map { height: 300px; } .location-refresh { font-size: 10px; } }
+
+/* Keep secondary information readable, including on smaller devices. */
+.location-panel-title p, .location-refresh, .location-map-caption, .location-details dt,
+.location-details dd small, .location-control-heading > span, .location-panel .location-notice,
+.location-device-note p { color: #796887; font-size: 12px; }
+.location-details dd { font-size: 14px; }
+.location-actions button, .location-control-heading h3 { font-size: 13px; }
+.location-device-note p { line-height: 1.7; }
+.location-map-caption a { min-height: 30px; }
+@container (max-width: 480px) { .location-actions button { font-size: 12px; } .location-refresh { font-size: 11px; } }
