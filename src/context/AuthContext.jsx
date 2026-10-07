@@ -41,6 +41,8 @@ export function AuthProvider({ children }) {
   }, [publicPage, restoreSession]);
   useEffect(() => {
     const expire = () => {
+      ++sessionVersion.current;
+      setLoading(false);
       setUser(null); setError("");
       setSessionNotice("Your previous session is no longer valid. Please sign in with your registered account.");
     };

@@ -1,7 +1,7 @@
 import React from "react";
 import Icon from "../Icon";
 
-function SupportOptionCard({ title, description, icon, actionText, onClick }) {
+function SupportOptionCard({ title, description, icon, actionText, onClick, disabled = false }) {
   return (
     <div 
       className="support-option-card"
@@ -35,11 +35,10 @@ function SupportOptionCard({ title, description, icon, actionText, onClick }) {
         </div>
       </div>
       
-      <div 
-        role="button"
-        tabIndex={0}
+      <button
+        type="button"
+        disabled={disabled}
         onClick={onClick}
-        onKeyDown={(e) => { if (e.key === 'Enter') onClick(); }}
         style={{
           marginTop: "auto",
           display: "flex",
@@ -51,7 +50,9 @@ function SupportOptionCard({ title, description, icon, actionText, onClick }) {
           color: "var(--ui-purple)",
           fontWeight: "600",
           fontSize: "14px",
-          cursor: "pointer",
+          cursor: disabled ? "not-allowed" : "pointer",
+          border: 0,
+          opacity: disabled ? 0.65 : 1,
           transition: "background 0.2s"
         }}
         onMouseOver={(e) => e.currentTarget.style.background = 'var(--ui-purple-soft)'}
@@ -59,7 +60,7 @@ function SupportOptionCard({ title, description, icon, actionText, onClick }) {
       >
         <span>{actionText}</span>
         <Icon name="arrow" size={16} />
-      </div>
+      </button>
     </div>
   );
 }

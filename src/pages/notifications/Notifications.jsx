@@ -6,18 +6,23 @@ import EmptyState from "../../components/ui/EmptyState";
 import Button from "../../components/ui/Button";
 import FilterPill from "../../components/ui/FilterPill";
 import api from "../../services/api";
+import { pageNumber } from "../../services/display";
+import { errorMessage } from "../../services/session";
+import { formatDate } from "../../services/display";
 import "./Notifications.css";
 
 function Notifications() {
   const [params, setParams] = useSearchParams();
   const unreadOnly = params.get("unread") === "true";
-  const page = parseInt(params.get("page") || "1", 10);
+  const page = pageNumber(params.get("page"));
   const limit = 20;
 
   const [notifications, setNotifications] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [pagination, setPagination] = useState(null);
+  const [saving, setSaving] = useState(false);
+  const [actionError, setActionError] = useState("");
 
   const abortControllerRef = useRef(null);
 
@@ -28,19 +33,20 @@ function Notifications() {
     if (abortControllerRef.current) {
       abortControllerRef.current.abort();
     }
-    abortControllerRef.current = new AbortController();
+    const controller = new AbortController();
+    abortControllerRef.current = controller;
 
     try {
       const res = await api.get("/notifications", {
         params: {
           unread_only: searchParams.get("unread") === "true",
-          page: searchParams.get("page") || 1,
+          page: pageNumber(searchParams.get("page")),
           limit
         },
-        signal: abortControllerRef.current.signal
+        signal: controller.signal
       });
       
-      if (res.data) {
+      if (!controller.signal.aborted && res.data) {
         setNotifications(res.data);
         setPagination(res.pagination);
       }
@@ -50,7 +56,7 @@ function Notifications() {
         setError(true);
       }
     } finally {
-      if (abortControllerRef.current && !abortControllerRef.current.signal.aborted) {
+      if (!controller.signal.aborted) {
         setLoading(false);
       }
     }
@@ -64,13 +70,15 @@ function Notifications() {
   }, [params]);
 
   const markAllAsRead = async () => {
+    if (saving) return;
+    setSaving(true); setActionError("");
     try {
       await api.patch("/notifications/read-all");
       // Refetch current page
       fetchNotifications(params);
     } catch (err) {
-      console.error("Failed to mark all as read", err);
-    }
+      setActionError(errorMessage(err));
+    } finally { setSaving(false); }
   };
   
   const handleFilterChange = (isUnread) => {
@@ -100,12 +108,13 @@ function Notifications() {
             <FilterPill active={!unreadOnly} label="All" onClick={() => handleFilterChange(false)} />
             <FilterPill active={unreadOnly} label="Unread" onClick={() => handleFilterChange(true)} />
           </div>
-          <Button variant="outline" size="sm" icon="check" iconPosition="left" onClick={markAllAsRead}>
+          <Button variant="outline" size="sm" icon="check" iconPosition="left" onClick={markAllAsRead} disabled={loading || saving}>
             Mark all as read
           </Button>
         </div>
       </div>
 
+      {actionError && <p role="alert">{actionError}</p>}
       <div className="notifications-list" style={{ marginTop: "24px" }}>
         {loading ? (
           <div style={{ padding: "40px", textAlign: "center" }}>
@@ -131,7 +140,7 @@ function Notifications() {
                   <strong>{notification.title}</strong>
                   <p>{notification.message}</p>
                   <div className="notification-meta">
-                    <span className="notification-time">{new Date(notification.created_at).toLocaleString()}</span>
+                    <span className="notification-time">{formatDate(notification.created_at)}</span>
                   </div>
                 </div>
               </div>

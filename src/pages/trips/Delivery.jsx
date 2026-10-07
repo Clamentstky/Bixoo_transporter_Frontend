@@ -38,19 +38,12 @@ function Delivery() {
   const advanceStatusTo = async (targetStatus) => {
     if (!trip || updating) return false;
     setUpdating(true); setError("");
-    const flow = ["ACCEPTED", "GOING_TO_PICKUP", "PICKED_UP", "IN_TRANSIT", "AT_DELIVERY", "DELIVERED", "COMPLETED"];
+    const next = { IN_TRANSIT: "AT_DELIVERY", AT_DELIVERY: "DELIVERED", DELIVERED: "COMPLETED" };
     try {
-      let current = trip.status;
-      const targetIdx = flow.indexOf(targetStatus);
-      if (targetIdx === -1) return;
-      
-      while (flow.indexOf(current) < targetIdx && flow.indexOf(current) !== -1) {
-        const nextStatus = flow[flow.indexOf(current) + 1];
-        const res = await api.patch(`/transporter/trips/${tripId}/status`, { status: nextStatus });
-        current = nextStatus;
-        setTrip(previous => ({ ...previous, ...res.data }));
-      }
-      return current === targetStatus;
+      if (next[trip.status] !== targetStatus) throw new Error("Complete the preceding trip step before continuing delivery.");
+      const res = await api.patch(`/transporter/trips/${tripId}/status`, { status: targetStatus });
+      setTrip(previous => ({ ...previous, ...res.data }));
+      return res.data.status === targetStatus;
     } catch (err) {
       setError(errorMessage(err, "Unable to update delivery status. Tracking has not been stopped by this action."));
       return false;
@@ -79,6 +72,7 @@ function Delivery() {
 
   if (loading) return <div className="trip-page"><p style={{ padding: "20px" }}>Loading...</p></div>;
   if (!trip) return <div className="trip-page"><EmptyState title="Trip unavailable" description={error || "This delivery does not exist."} /><div style={{textAlign: "center", padding: "20px"}}><Button variant="secondary" onClick={() => navigate(-1)}>Go Back</Button></div></div>;
+  if (!["IN_TRANSIT", "AT_DELIVERY", "DELIVERED", "COMPLETED"].includes(trip.status)) return <div className="trip-page"><EmptyState title="Delivery is not ready" description="Review the current trip status and complete pickup before confirming delivery." action={{ label: "View trip", onClick: () => navigate(`/trips/${tripId}/live`) }} /></div>;
 
   let displayStatus = "Arriving at Destination";
   if (deliveryStatus === "Arrived") displayStatus = "Arrived at Destination";
@@ -108,7 +102,7 @@ function Delivery() {
               <small>Delivery Location</small>
               <div>
                 <strong>{trip.request?.delivery_city || "Unknown"}</strong>
-                {trip.request?.delivery_location && <p>{trip.request.delivery_location}</p>}
+                {trip.request?.delivery_address && <p>{trip.request.delivery_address}</p>}
               </div>
             </div>
             
@@ -126,7 +120,7 @@ function Delivery() {
             
             <div className="delivery-info-item row-item">
               <small>Vehicle</small>
-              <strong>{trip.request?.truck_type || "Your Assigned Vehicle"}</strong>
+              <strong>{trip.request?.required_vehicle_type || "Not provided"}</strong>
             </div>
             
             <div className="delivery-info-item row-item earnings">
@@ -145,7 +139,7 @@ function Delivery() {
           )}
           {deliveryStatus === "Arrived" && (
             <button className="btn-delivery-primary" disabled={updating} onClick={handleStartUnloading}>
-              Start Unloading
+              Confirm Delivered
             </button>
           )}
           {deliveryStatus === "Unloading" && (

@@ -56,9 +56,19 @@
 
 .chat-contact-info span {
   font-size: 13px;
-  color: #16a34a; /* Green for online */
+  color: var(--ui-muted, #6c6379);
   font-weight: 500;
 }
+
+.chat-quick-actions {
+  display: flex;
+  gap: 8px;
+  padding: 10px 16px;
+  overflow-x: auto;
+  border-bottom: 1px solid var(--ui-border, #e4dfeb);
+  background: #fff;
+}
+.chat-quick-actions .bixoo-btn { flex: 0 0 auto; }
 
 /* Messages Area */
 .chat-messages-area {

@@ -8,17 +8,17 @@ import "./SupportPages.css";
 const faqData = [
   { id: 1, category: "Loads", question: "How do I accept a load?", answer: "Open Available Loads, select the required load, review the load details and choose Accept." },
   { id: 2, category: "Loads", question: "Why is my load no longer available?", answer: "The load may have been accepted by another transporter, cancelled, expired, or may no longer match your availability." },
-  { id: 3, category: "Trips", question: "How do I start pickup?", answer: "Open My Trips, choose an accepted trip and use the Start Pickup action." },
-  { id: 4, category: "Trips", question: "How do I share live location?", answer: "Open the active trip/chat and use the Send Live Location option while the trip is active." },
+  { id: 3, category: "Trips", question: "How do I start pickup?", answer: "Open My Trips, choose an accepted trip and open Live Trip and confirm each pickup and transit step." },
+  { id: 4, category: "Trips", question: "How do I share live location?", answer: "Open Live Trip, start tracking, allow device location, then create a sharing link after a fresh GPS location is saved. Links expire after one hour and stop working when revoked or tracking ends." },
   { id: 5, category: "Payments", question: "How is settlement calculated?", answer: "Settlement information is calculated by the backend based on completed trip and applicable settlement rules." },
-  { id: 6, category: "Account", question: "How do I update my vehicle information?", answer: "Go to Profile, click Edit Profile, and update your vehicle details under the Vehicle section." },
-  { id: 7, category: "Documents", question: "What documents are required for settlement?", answer: "You must upload a Gate Pass photo and the signed Proof of Delivery (POD) to receive your settlement." },
+  { id: 6, category: "Account", question: "How do I update my vehicle information?", answer: "Profile shows your recorded vehicle details. Vehicle editing is not yet available in the website; submit a support ticket if details need correction." },
+  { id: 7, category: "Documents", question: "What documents are required for settlement?", answer: "You can upload Gate Pass, E-Way Bill and Proof of Delivery files from the trip documents page. Consult support for the requirements for your trip." },
   { id: 8, category: "Technical", question: "The app is not loading loads. What should I do?", answer: "Please check your internet connection. If the problem persists, try logging out and logging back in, or contact BIXOO support." }
 ];
 
 const categories = ["All", "Account", "Loads", "Trips", "Payments", "Documents", "Technical"];
 
-function FAQs() {
+function FAQs({ title = "Frequently Asked Questions" }) {
   const [search, setSearch] = useState("");
   const [activeCategory, setActiveCategory] = useState("All");
   const [openItem, setOpenItem] = useState(null);
@@ -37,7 +37,7 @@ function FAQs() {
     <div className="support-page ui-page">
       <div className="support-container">
         <SupportPageHeader 
-          title="Frequently Asked Questions"
+          title={title}
           subtitle="Quick answers to common BIXOO Transporter questions."
         />
 
@@ -47,7 +47,7 @@ function FAQs() {
           </div>
           <input 
             type="text" 
-            placeholder="Search FAQs..." 
+            aria-label="Search FAQs" placeholder="Search FAQs..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             style={{

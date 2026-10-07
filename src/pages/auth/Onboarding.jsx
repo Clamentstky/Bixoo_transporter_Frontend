@@ -196,34 +196,9 @@ function Onboarding() {
               </div>
 
               <div className="form-field">
-                <label htmlFor="onboarding-capacity">Vehicle Capacity</label>
+                <label htmlFor="onboarding-capacity">Vehicle Capacity (Tons)</label>
 
-              <select id="onboarding-capacity"
-                  name="capacity"
-                  value={formData.capacity}
-                  onChange={handleChange}
-                  required
-                >
-                  <option value="">
-                    Select capacity
-                  </option>
-
-                  <option value="1-5 Tons">
-                    1 - 5 Tons
-                  </option>
-
-                  <option value="5-10 Tons">
-                    5 - 10 Tons
-                  </option>
-
-                  <option value="10-20 Tons">
-                    10 - 20 Tons
-                  </option>
-
-                  <option value="20+ Tons">
-                    20+ Tons
-                  </option>
-                </select>
+              <input id="onboarding-capacity" name="capacity" type="number" min="0.01" max="99999999.99" step="0.01" placeholder="Capacity in tons" value={formData.capacity} onChange={handleChange} required />
               </div>
 
             </div>

@@ -5,6 +5,7 @@ import api from "../../services/api";
 import EmptyState from "../../components/ui/EmptyState";
 import Button from "../../components/ui/Button";
 import "./TripComplete.css";
+import { errorMessage } from "../../services/session";
 
 function TripComplete() {
   const { tripId } = useParams();
@@ -12,6 +13,7 @@ function TripComplete() {
 
   const [trip, setTrip] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
   useEffect(() => {
     const fetchTrip = async () => {
@@ -19,7 +21,7 @@ function TripComplete() {
         const res = await api.get(`/transporter/trips/${tripId}`);
         if (res.data) setTrip(res.data);
       } catch (err) {
-        console.error(err);
+        setError(errorMessage(err));
       } finally {
         setLoading(false);
       }
@@ -38,12 +40,14 @@ function TripComplete() {
   if (loading) return <div className="trip-complete-page"><p style={{ padding: "20px" }}>Loading...</p></div>;
   if (!trip) return (
     <div className="trip-complete-page">
-      <EmptyState title="Unable to load completed trip." description="This trip does not exist." />
+      <EmptyState title="Unable to load completed trip." description={error || "This trip does not exist."} />
       <div style={{textAlign: "center", padding: "20px"}}>
         <Button variant="outline" onClick={() => navigate("/trips")}>Back to My Trips</Button>
       </div>
     </div>
   );
+
+  if (trip.status !== "COMPLETED") return <div className="trip-complete-page"><EmptyState title="Trip is not completed" description={`Current status: ${trip.status.replaceAll("_", " ")}.`} action={{ label: "View trip", onClick: () => navigate(`/trips/${tripId}`) }} /></div>;
 
   // Format completed date safely and fix UTC timezone bug
   const formattedDate = trip.completed_at 
@@ -51,7 +55,7 @@ function TripComplete() {
         day: '2-digit', month: 'short', year: 'numeric',
         hour: '2-digit', minute: '2-digit'
       })
-    : "Pending";
+    : "Not recorded";
 
   return (
     <div className="trip-complete-page">
@@ -99,41 +103,22 @@ function TripComplete() {
             </div>
             <div className="completion-item">
               <small>Vehicle</small>
-              <strong>{trip.request?.truck_type || "Your Assigned Vehicle"}</strong>
+              <strong>{trip.request?.required_vehicle_type || "Not provided"}</strong>
             </div>
           </div>
         </div>
 
-        {trip.status !== "COMPLETED" && (
-          <div style={{ marginBottom: "24px" }}>
-            <Button 
-              variant="primary" 
-              style={{ width: "100%", justifyContent: "center" }}
-              onClick={async () => {
-                try {
-                  await api.patch(`/transporter/trips/${tripId}/status`, { status: "COMPLETED" });
-                  window.location.reload();
-                } catch (e) {
-                  alert("Failed to complete trip. Please try again.");
-                }
-              }}
-            >
-              Verify & Complete Trip Now
-            </Button>
-          </div>
-        )}
-
         <div className="earnings-card">
-          <small>Earnings Added</small>
+          <small>Offered trip amount</small>
           {trip.request?.offered_amount ? (
             <>
               <h2>₹{Number(trip.request.offered_amount).toLocaleString()}</h2>
-              <p>Added to your transporter wallet</p>
+              <p>Check your wallet for recorded credits and settlement status.</p>
             </>
           ) : (
             <>
               <h2>Settlement amount pending</h2>
-              <p>Wallet will be updated shortly</p>
+              <p>No amount has been recorded for this trip.</p>
             </>
           )}
         </div>

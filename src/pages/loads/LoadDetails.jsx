@@ -5,6 +5,8 @@ import api from "../../services/api";
 import EmptyState from "../../components/ui/EmptyState";
 import Button from "../../components/ui/Button";
 import "./LoadDetails.css";
+import { errorMessage } from "../../services/session";
+import { formatDate } from "../../services/display";
 
 function LoadDetails() {
   const navigate = useNavigate();
@@ -14,42 +16,52 @@ function LoadDetails() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isAccepting, setIsAccepting] = useState(false);
+  const [actionError, setActionError] = useState("");
 
   useEffect(() => {
+    let active = true;
+    setLoading(true); setError(null); setLoad(null);
     const fetchLoad = async () => {
       try {
         const res = await api.get(`/transporter/loads/${loadId}`);
-        if (res.data) setLoad(res.data);
+        if (active && res.data) setLoad(res.data);
       } catch (err) {
-        setError(err);
+        if (active) setError(err);
       } finally {
-        setLoading(false);
+        if (active) setLoading(false);
       }
     };
     if (loadId) fetchLoad();
+    return () => { active = false; };
   }, [loadId]);
 
   const handleAccept = async () => {
     try {
       setIsAccepting(true);
-      await api.post(`/transporter/loads/${loadId}/accept`);
-      navigate("/trips");
+      setActionError("");
+      const response = await api.post(`/transporter/loads/${loadId}/accept`);
+      navigate(`/trips/${response.data.trip_id}`);
     } catch (err) {
-      console.error(err);
-      alert(err.response?.data?.detail || "Failed to accept load");
+      setActionError(errorMessage(err));
     } finally {
       setIsAccepting(false);
     }
   };
 
-  const handleDecline = () => {
-    navigate(-1);
+  const handleDecline = async () => {
+    setIsAccepting(true); setActionError("");
+    try {
+      await api.post(`/transporter/loads/${loadId}/reject`, {});
+      navigate("/loads");
+    } catch (err) { setActionError(errorMessage(err)); }
+    finally { setIsAccepting(false); }
   };
 
   if (loading) return <div className="load-details-page"><p style={{ padding: "20px" }}>Loading details...</p></div>;
   if (error || !load) return <div className="load-details-page"><EmptyState title="Load not found" description="This load might have expired or you don't have access to it." /><div style={{textAlign: "center", padding: "20px"}}><Button variant="secondary" onClick={() => navigate(-1)}>Go Back to Available Loads</Button></div></div>;
 
   const req = load.request;
+  const canRespond = ["PENDING", "VIEWED"].includes(load.match_status) && req?.status === "PENDING";
 
   return (
     <div className="load-details-page">
@@ -67,12 +79,12 @@ function LoadDetails() {
           <div className="load-summary-row">
             <div className="direct-match-badge">
               <span className="dot"></span>
-              Direct Match &middot; {load.distance_from_pickup} km away
+              Direct match {load.distance_from_pickup != null ? `• ${load.distance_from_pickup} km away` : "• distance unavailable"}
             </div>
             
             <div className="payout-info">
               <strong>{req?.offered_amount ? `₹${Number(req.offered_amount).toLocaleString()}` : "Payout unavailable"}</strong>
-              <small>Est. Payout</small>
+              <small>Est. earnings</small>
             </div>
           </div>
 
@@ -84,7 +96,7 @@ function LoadDetails() {
               <div className="route-content">
                 <small>Pickup</small>
                 <strong>{req?.pickup_city}</strong>
-                <p>{req?.pickup_location}</p>
+                <p>{req?.pickup_address}</p>
               </div>
             </div>
             
@@ -93,7 +105,7 @@ function LoadDetails() {
               <div className="route-content">
                 <small>Delivery</small>
                 <strong>{req?.delivery_city}</strong>
-                <p>{req?.delivery_location}</p>
+                <p>{req?.delivery_address}</p>
               </div>
             </div>
           </div>
@@ -121,33 +133,35 @@ function LoadDetails() {
               <span className="info-icon"><Icon name="truck" size={20} /></span>
               <div className="info-content">
                 <small>Vehicle Type</small>
-                <strong>{req?.truck_type || "Any Suitable"}</strong>
+                <strong>{req?.required_vehicle_type || "Not provided"}</strong>
               </div>
             </div>
             
             <div className="info-item">
               <span className="info-icon"><Icon name="clock" size={20} /></span>
               <div className="info-content">
-                <small>Start Time</small>
-                <strong>{req?.start_time || "Flexible"}</strong>
+                <small>Pickup date & time</small>
+                <strong>{formatDate(req?.pickup_date)}</strong>
               </div>
             </div>
           </div>
 
           <div className="load-divider"></div>
 
+          {actionError && <p role="alert">{actionError}</p>}
+          {!canRespond && <p role="status">This load is no longer available to accept or decline.</p>}
           <div className="load-actions">
             <button 
               className="btn-decline" 
               onClick={handleDecline} 
-              disabled={isAccepting}
+              disabled={isAccepting || !canRespond}
             >
               <Icon name="close" size={18} /> Decline
             </button>
             <button 
               className="btn-accept" 
               onClick={handleAccept} 
-              disabled={isAccepting}
+              disabled={isAccepting || !canRespond}
             >
               <Icon name="check" size={18} /> {isAccepting ? "Accepting..." : "Accept Load"}
             </button>

@@ -1,10 +1,10 @@
 import Icon from "../../components/Icon";
-import { ACTIVE_TRIP_STATUSES } from "../../context/LocationTrackingContext";
 import "./LiveTripPage.css";
 
 export default function LiveTripView({ trip, children, error, advancing, onBack, onChat, onDelivery }) {
   const request = trip.request;
   const status = trip.status.replaceAll("_", " ").toLowerCase();
+  const nextLabel = { ACCEPTED: "Start heading to pickup", GOING_TO_PICKUP: "Confirm pickup", PICKED_UP: "Start transit", IN_TRANSIT: "Open delivery", AT_DELIVERY: "Open delivery", DELIVERED: "Finish delivery" }[trip.status];
   return <div className="bixoo-live-page">
     <div className="bixoo-live-container">
       <nav className="bixoo-live-breadcrumb" aria-label="Breadcrumb">
@@ -22,8 +22,8 @@ export default function LiveTripView({ trip, children, error, advancing, onBack,
           <section className="bixoo-live-card">
             <div className="bixoo-live-card-heading"><span className="bixoo-live-icon"><Icon name="pin" /></span><div><h2>Your route</h2><p>{trip.trip_code || `Trip ${trip.id}`}</p></div></div>
             <div className="bixoo-live-route">
-              <div className="bixoo-live-stop"><span className="bixoo-live-route-dot" /><div><small>PICKUP</small><h3>{request?.pickup_city || "Pickup not provided"}</h3>{request?.pickup_location && <p>{request.pickup_location}</p>}</div></div>
-              <div className="bixoo-live-stop"><span className="bixoo-live-route-dot is-destination" /><div><small>DELIVERY</small><h3>{request?.delivery_city || "Delivery not provided"}</h3>{request?.delivery_location && <p>{request.delivery_location}</p>}</div></div>
+              <div className="bixoo-live-stop"><span className="bixoo-live-route-dot" /><div><small>PICKUP</small><h3>{request?.pickup_city || "Pickup not provided"}</h3>{request?.pickup_address && <p>{request.pickup_address}</p>}</div></div>
+              <div className="bixoo-live-stop"><span className="bixoo-live-route-dot is-destination" /><div><small>DELIVERY</small><h3>{request?.delivery_city || "Delivery not provided"}</h3>{request?.delivery_address && <p>{request.delivery_address}</p>}</div></div>
             </div>
             <div className="bixoo-live-distance"><span>Estimated distance</span><strong>{request?.estimated_distance != null ? `${request.estimated_distance} km` : "Not provided"}</strong></div>
           </section>
@@ -33,7 +33,7 @@ export default function LiveTripView({ trip, children, error, advancing, onBack,
             <dl className="bixoo-live-cargo">
               <div><dt>Goods</dt><dd>{request?.goods_name || "Not specified"}</dd></div>
               <div><dt>Weight</dt><dd>{request?.weight != null ? `${request.weight} ${request.weight_unit || ""}` : "Not specified"}</dd></div>
-              <div><dt>Vehicle</dt><dd>{request?.truck_type || "Any suitable vehicle"}</dd></div>
+              <div><dt>Vehicle</dt><dd>{request?.required_vehicle_type || "Not provided"}</dd></div>
             </dl>
             <button className="bixoo-live-message" type="button" onClick={onChat}><Icon name="chat" size={17} /> Open trip chat<Icon name="arrow" size={16} /></button>
           </section>
@@ -43,7 +43,7 @@ export default function LiveTripView({ trip, children, error, advancing, onBack,
             <h2>Ready for the next step?</h2>
             <p>Manage arrival, unloading and delivery confirmation.</p>
             {error && <p role="alert" className="location-warning">{error}</p>}
-            <button type="button" onClick={onDelivery} disabled={advancing || !ACTIVE_TRIP_STATUSES.includes(trip.status)}>{advancing ? "Updating trip…" : "Confirm delivery"}<Icon name="arrow" size={18} /></button>
+            <button type="button" onClick={onDelivery} disabled={advancing || !nextLabel}>{advancing ? "Updating trip…" : nextLabel || "Trip ended"}<Icon name="arrow" size={18} /></button>
           </section>
         </aside>
       </div>

@@ -2,6 +2,8 @@ import { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate, Outlet } from "react-router-dom";
 import Icon from "../Icon";
 import { useAuth } from "../../context/AuthContext";
+import api from "../../services/api";
+import { errorMessage } from "../../services/session";
 
 import "./TransporterLayout.css";
 import "./TransporterUI.css";
@@ -46,9 +48,16 @@ function TransporterLayout() {
     };
   }, [drawerOpen]);
 
-  const [isOnline, setIsOnline] = useState(
-    localStorage.getItem("transporter_status") === "online"
-  );
+  const [isOnline, setIsOnline] = useState(null);
+  const [availabilityBusy, setAvailabilityBusy] = useState(false);
+  const [availabilityError, setAvailabilityError] = useState("");
+  useEffect(() => {
+    let active = true;
+    api.get("/transporter/availability").then(response => {
+      if (active) setIsOnline(response.data.is_online);
+    }).catch(error => { if (active) setAvailabilityError(errorMessage(error)); });
+    return () => { active = false; };
+  }, [user.id]);
 
   const transporterName = user.name;
 
@@ -93,15 +102,19 @@ function TransporterLayout() {
     return location.pathname.startsWith(path);
   };
 
-  const toggleAvailability = () => {
-    const newStatus = !isOnline;
-
-    setIsOnline(newStatus);
-
-    localStorage.setItem(
-      "transporter_status",
-      newStatus ? "online" : "offline"
-    );
+  const toggleAvailability = async () => {
+    if (availabilityBusy) return;
+    setAvailabilityBusy(true); setAvailabilityError("");
+    try {
+      if (isOnline === null) {
+        const response = await api.get("/transporter/availability");
+        setIsOnline(response.data.is_online);
+      } else {
+        const response = await api.patch("/transporter/availability", { is_online: !isOnline, is_available: !isOnline });
+        setIsOnline(response.data.is_online);
+      }
+    } catch (error) { setAvailabilityError(errorMessage(error)); }
+    finally { setAvailabilityBusy(false); }
   };
 
   const handleNavigation = (path) => {
@@ -116,6 +129,7 @@ function TransporterLayout() {
 
   return (
     <div className="transporter-layout">
+      {availabilityError && <div role="alert" style={{ position: "fixed", bottom: 16, right: 16, maxWidth: "90vw", zIndex: 1000, padding: 12, background: "white", border: "1px solid #ccc" }}>{availabilityError}<button onClick={toggleAvailability} disabled={availabilityBusy}>Retry availability</button></div>}
 
       {/* Mobile Overlay */}
 
@@ -199,7 +213,7 @@ function TransporterLayout() {
                   isOnline ? "online" : "offline"
                 }`}
               >
-                {isOnline ? "ONLINE" : "OFFLINE"}
+                {isOnline === null ? "UNKNOWN" : isOnline ? "ONLINE" : "OFFLINE"}
               </span>
             </div>
 
@@ -211,6 +225,7 @@ function TransporterLayout() {
               aria-checked={isOnline}
               aria-label="Availability"
               onClick={toggleAvailability}
+              disabled={availabilityBusy || isOnline === null}
             >
               <span></span>
             </button>
@@ -275,9 +290,10 @@ function TransporterLayout() {
               aria-label={isOnline ? "Go offline" : "Go online"}
               aria-pressed={isOnline}
               onClick={toggleAvailability}
+              disabled={availabilityBusy || isOnline === null}
             >
               <i></i>
-              {isOnline ? "Online" : "Offline"}
+              {isOnline === null ? "Availability unknown" : isOnline ? "Online" : "Offline"}
             </button>
 
             <button

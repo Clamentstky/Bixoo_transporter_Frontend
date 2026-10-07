@@ -30,6 +30,7 @@ export default function Button({
   return (
     <button
       type={type}
+      aria-label={!children && icon ? ({ arrowLeft: "Go back", close: "Close" }[icon] || icon) : undefined}
       className={classes}
       disabled={disabled || loading}
       {...props}

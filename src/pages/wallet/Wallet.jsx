@@ -5,127 +5,120 @@ import PageHeader from "../../components/ui/PageHeader";
 import Button from "../../components/ui/Button";
 import api from "../../services/api";
 import "./Wallet.css";
+import EmptyState from "../../components/ui/EmptyState";
+import { errorMessage } from "../../services/session";
+import { formatDate } from "../../services/display";
+
+const money = (value) => `\u20B9${Number(value || 0).toLocaleString("en-IN", { maximumFractionDigits: 2 })}`;
 
 function Wallet() {
   const navigate = useNavigate();
-  const [selectedPlan, setSelectedPlan] = useState("weekly");
   const [wallet, setWallet] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const [page, setPage] = useState(1);
+  const [pagination, setPagination] = useState(null);
+  const [attempt, setAttempt] = useState(0);
 
   useEffect(() => {
+    const controller = new AbortController();
     const fetchWallet = async () => {
+      setLoading(true);
+      setError("");
       try {
-        const res = await api.get("/transporter/wallet");
-        if (res.data) {
-          setWallet(res.data);
+        const response = await api.get("/transporter/wallet", {
+          params: { page, limit: 10, sort_order: "desc" },
+          signal: controller.signal,
+        });
+        if (!controller.signal.aborted) {
+          setWallet(response.data);
+          setPagination(response.pagination);
         }
       } catch (err) {
-        console.error(err);
+        if (!controller.signal.aborted) setError(errorMessage(err));
       } finally {
-        setLoading(false);
+        if (!controller.signal.aborted) setLoading(false);
       }
     };
     fetchWallet();
-  }, []);
+    return () => controller.abort();
+  }, [page, attempt]);
 
-  const handleContinue = () => {
-    if (selectedPlan === "weekly") {
-      navigate("/wallet/weekly-settlement");
-    } else {
-      navigate("/wallet/secure-payment");
-    }
-  };
+  const transactions = wallet?.transactions || [];
+  if (error) {
+    return <div className="ui-page"><EmptyState title="Wallet unavailable" description={error} action={{ label: "Retry", onClick: () => setAttempt(value => value + 1) }} /></div>;
+  }
 
   return (
     <div className="wallet-page ui-page">
-      <PageHeader eyebrow="TRANSPORTER WALLET" title="Wallet" description="Manage your earnings and settlements." />
-      
-      {loading ? (
-        <section className="wallet-balance-card" aria-label="Wallet summary">
-          <p style={{ color: "white", padding: "20px" }}>Loading wallet...</p>
-        </section>
-      ) : (
-        <section className="wallet-balance-card" aria-label="Wallet summary">
-          <div className="wallet-balance-top">
-            <span className="balance-wallet-icon"><Icon name="wallet" size={28} /></span>
-            <div>
-              <span>Current Pending Balance</span>
-              <strong>{wallet?.pending_amount ? `₹${Number(wallet.pending_amount).toLocaleString()}` : "₹0"}</strong>
-            </div>
-          </div>
-          <div className="balance-footer">
-            <div>
-              <span>Available Balance</span>
-              <strong>{wallet?.available_balance ? `₹${Number(wallet.available_balance).toLocaleString()}` : "₹0"}</strong>
-            </div>
-            <div>
-              <span>Total Earnings</span>
-              <strong>{wallet?.total_earnings ? `₹${Number(wallet.total_earnings).toLocaleString()}` : "₹0"}</strong>
-            </div>
-          </div>
-        </section>
-      )}
+      <PageHeader eyebrow="TRANSPORTER WALLET" title="Wallet" description="A simple view of your trip earnings and settlements." />
 
-      <div className="wallet-plan-layout">
-        <section className="settlement-section">
-          <div className="wallet-section-heading">
-            <span className="ui-eyebrow">SETTLEMENT</span>
-            <h2>Choose Settlement Plan</h2>
-            <p>Select the plan that works for your business.</p>
+      <section className="wallet-overview" aria-label="Wallet summary" aria-busy={loading}>
+        <div className="wallet-overview-main">
+          <span className="wallet-overview-icon"><Icon name="wallet" size={27} /></span>
+          <div>
+            <span className="wallet-overview-label">Completed-trip earnings</span>
+            <strong>{loading ? "—" : money(wallet?.total_earnings)}</strong>
+            <span className="wallet-overview-note">Recorded from completed trips</span>
           </div>
-          <fieldset className="settlement-options">
-            <legend className="sr-only">Settlement plan</legend>
-            {[
-              {id:"weekly", title:"Weekly Settlement", description:"Settle your completed trips every week.", icon:"calendar"},
-              {id:"monthly", title:"Monthly Subscription", description:"Manage settlements with a monthly plan.", icon:"clock"}
-            ].map(plan => (
-              <label key={plan.id} className={`settlement-option ${selectedPlan === plan.id ? "selected" : ""}`}>
-                <span className="settlement-option-icon"><Icon name={plan.icon} size={24} /></span>
-                <div className="settlement-option-info">
-                  <strong>{plan.title}</strong>
-                  <span>{plan.description}</span>
-                </div>
-                <input type="radio" name="plan" value={plan.id} checked={selectedPlan === plan.id} onChange={(e) => setSelectedPlan(e.target.value)} className="sr-only" />
-                <span className="radio-circle"></span>
-              </label>
-            ))}
-          </fieldset>
+        </div>
+        <dl className="wallet-overview-stats">
+          <div><dt>Pending settlements</dt><dd>{loading ? "—" : money(wallet?.pending_amount)}</dd></div>
+          <div><dt>Settled earnings</dt><dd>{loading ? "—" : money(wallet?.settled_earnings)}</dd></div>
+        </dl>
+      </section>
+
+      <div className="wallet-layout">
+        <section className="wallet-settlement-card" aria-labelledby="wallet-settlement-title">
+          <div className="wallet-card-kicker"><Icon name="calendar" size={15} /> SETTLEMENTS</div>
+          <h2 id="wallet-settlement-title">Your settlements</h2>
+          <p>Review the payouts waiting to be settled for your completed trips.</p>
+
+          <div className="wallet-payout-summary">
+            <span className="wallet-payout-icon"><Icon name="document" size={23} /></span>
+            <div>
+              <span>Pending settlements</span>
+              <strong>{loading ? "Loading…" : money(wallet?.pending_amount)}</strong>
+            </div>
+            <Button variant="outline" icon="arrow" iconPosition="right" onClick={() => navigate("/wallet/weekly-settlement")}>View details</Button>
+          </div>
+
+          <div className="wallet-record-note">
+            <Icon name="check" size={18} />
+            <span>Settlement amounts are calculated from recorded trip earnings and deductions.</span>
+          </div>
         </section>
-        
-        <section className="wallet-action-section">
-          <div className="wallet-transactions">
-            <h3>Recent Transactions</h3>
-            {loading ? (
-              <p style={{ padding: "20px" }}>Loading transactions...</p>
-            ) : wallet?.transactions?.length > 0 ? (
-              <ul style={{ listStyle: "none", padding: 0 }}>
-                {wallet.transactions.map((t, idx) => (
-                  <li key={idx} style={{ display: "flex", justifyContent: "space-between", padding: "12px 0", borderBottom: "1px solid var(--border)" }}>
-                    <div>
-                      <strong style={{ display: "block" }}>{t.transaction_type}</strong>
-                      <small style={{ color: "var(--text-muted)" }}>{t.reference_id || "No Reference"}</small>
-                    </div>
-                    <strong style={{ color: t.transaction_type === 'CREDIT' ? 'var(--success)' : 'inherit' }}>
-                      {t.transaction_type === 'CREDIT' ? '+' : '-'}₹{Number(t.amount).toLocaleString()}
-                    </strong>
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <p style={{ color: "var(--text-muted)", padding: "20px 0" }}>No wallet transactions yet.</p>
-            )}
+
+        <section className="wallet-transactions-card" aria-labelledby="wallet-transactions-title">
+          <div className="wallet-transactions-heading">
+            <div><span className="wallet-card-kicker">EARNING HISTORY</span><h2 id="wallet-transactions-title">Trip-wise earnings</h2></div>
+            {!loading && <span className="wallet-count">{pagination?.total || 0}</span>}
           </div>
-          
-          <Button 
-            variant="primary" 
-            className="wallet-continue-btn" 
-            onClick={handleContinue} 
-            aria-label="Continue with selected plan"
-            icon="arrow"
-            iconPosition="right"
-          >
-            Continue
-          </Button>
+
+          {loading ? <div className="wallet-list-state" role="status">Loading transactions…</div> : transactions.length ? (
+            <ul className="wallet-transaction-list">
+              {transactions.map((transaction) => {
+                const credit = transaction.transaction_type === "CREDIT";
+                return <li key={transaction.id} className="wallet-transaction">
+                  <span className={`wallet-transaction-icon ${credit ? "is-credit" : "is-debit"}`}><Icon name={credit ? "arrow" : "arrowLeft"} size={17} /></span>
+                  <div className="wallet-transaction-copy">
+                    <strong>{transaction.trip_id ? `Trip #${transaction.trip_id}` : transaction.description || "Wallet adjustment"}</strong>
+                    <span>{transaction.description || transaction.reference_number || "Reference unavailable"} <i>•</i> {formatDate(transaction.created_at)}</span>
+                  </div>
+                  <div className="wallet-transaction-amount">
+                    <strong className={credit ? "is-credit" : "is-debit"}>{credit ? "+" : "−"}{money(transaction.amount)}</strong>
+                    <span>{transaction.status}</span>
+                  </div>
+                </li>;
+              })}
+            </ul>
+          ) : <div className="wallet-list-state"><Icon name="wallet" size={25} /><p>No completed-trip earnings have been recorded yet.</p></div>}
+
+          {pagination?.total_pages > 1 && <nav className="wallet-pagination" aria-label="Transaction pages">
+            <Button variant="outline" disabled={loading || page <= 1} onClick={() => setPage(value => value - 1)}>Previous</Button>
+            <span>Page {page} of {pagination.total_pages}</span>
+            <Button variant="outline" disabled={loading || page >= pagination.total_pages} onClick={() => setPage(value => value + 1)}>Next</Button>
+          </nav>}
         </section>
       </div>
     </div>

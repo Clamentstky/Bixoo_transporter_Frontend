@@ -7,6 +7,7 @@ import EmptyState from "../../components/ui/EmptyState";
 import Button from "../../components/ui/Button";
 import FilterPill from "../../components/ui/FilterPill";
 import api from "../../services/api";
+import { pageNumber, formatDate } from "../../services/display";
 import "./AvailableLoads.css";
 
 function AvailableLoads() {
@@ -15,8 +16,10 @@ function AvailableLoads() {
   
   // URL params state
   const query = params.get("search") || "";
+  const [searchText, setSearchText] = useState(query);
+  useEffect(() => { setSearchText(query); }, [query]);
   const status = params.get("status") || "all";
-  const page = parseInt(params.get("page") || "1", 10);
+  const page = pageNumber(params.get("page"));
   const limit = 10;
 
   const [loads, setLoads] = useState([]);
@@ -35,29 +38,31 @@ function AvailableLoads() {
     if (abortControllerRef.current) {
       abortControllerRef.current.abort();
     }
-    abortControllerRef.current = new AbortController();
+    const controller = new AbortController();
+    abortControllerRef.current = controller;
 
     try {
       const res = await api.get("/transporter/loads", {
         params: {
           search: searchParams.get("search") || undefined,
           status: searchParams.get("status") || undefined,
-          page: searchParams.get("page") || 1,
+          page: pageNumber(searchParams.get("page")),
           limit
         },
-        signal: abortControllerRef.current.signal
+        signal: controller.signal
       });
       
-      if (res.data) {
+      if (!controller.signal.aborted && res.data) {
         const mappedLoads = res.data.map(item => ({
           id: item.match_id,
           status: item.match_status === "PENDING" ? "NEW LOAD" : item.match_status,
-          distance: `${item.distance_from_pickup || 0} km away`,
+          distance: item.distance_from_pickup != null ? `${item.distance_from_pickup} km away` : "Distance unavailable",
           pickup: item.request.pickup_city,
           delivery: item.request.delivery_city,
           weight: `${item.request.weight} ${item.request.weight_unit}`,
           type: item.request.goods_name,
-          start: item.request.pickup_time || "Flexible",
+          vehicle: item.request.required_vehicle_type,
+          start: formatDate(item.request.pickup_date),
           payout: item.request.offered_amount
         }));
         
@@ -70,7 +75,7 @@ function AvailableLoads() {
         setError(true);
       }
     } finally {
-      if (abortControllerRef.current && !abortControllerRef.current.signal.aborted) {
+      if (!controller.signal.aborted) {
         setLoading(false);
       }
     }
@@ -81,11 +86,13 @@ function AvailableLoads() {
     fetchLoads(params);
     return () => {
       if (abortControllerRef.current) abortControllerRef.current.abort();
+      clearTimeout(debounceRef.current);
     };
   }, [params]);
 
   const handleSearch = (e) => {
     const val = e.target.value;
+    setSearchText(val);
     
     if (debounceRef.current) clearTimeout(debounceRef.current);
     
@@ -115,6 +122,7 @@ function AvailableLoads() {
   };
   
   const handleReset = () => {
+    clearTimeout(debounceRef.current); setSearchText("");
     setParams(new URLSearchParams());
   };
 
@@ -129,7 +137,7 @@ function AvailableLoads() {
             type="search" 
             aria-label="Search available loads" 
             placeholder="Search by load, location or material..." 
-            defaultValue={query} 
+            value={searchText}
             onChange={handleSearch} 
           />
         </label>

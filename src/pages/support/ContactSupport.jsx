@@ -5,6 +5,7 @@ import Icon from "../../components/Icon";
 import Button from "../../components/ui/Button";
 import api from "../../services/api";
 import "./SupportPages.css";
+import { errorMessage } from "../../services/session";
 
 const SUPPORT_PHONE = import.meta.env.VITE_SUPPORT_PHONE;
 const SUPPORT_EMAIL = import.meta.env.VITE_SUPPORT_EMAIL;
@@ -31,7 +32,15 @@ function ContactSupport() {
 
   const handleFileChange = (e) => {
     if (e.target.files && e.target.files[0]) {
-      setFile(e.target.files[0]);
+      const selected = e.target.files[0];
+      if (selected.size > 5 * 1024 * 1024) {
+        setFile(null);
+        e.target.value = "";
+        setError("Attachments must be 5 MB or smaller.");
+        return;
+      }
+      setFile(selected);
+      setError("");
     }
   };
 
@@ -39,12 +48,12 @@ function ContactSupport() {
     e.preventDefault();
     setError("");
     
-    if (!formData.category || !formData.subject || !formData.description) {
+    if (!formData.category || !formData.subject.trim() || !formData.description.trim()) {
       setError("Please fill out all required fields.");
       return;
     }
     
-    if (formData.description.length < 10) {
+    if (formData.description.trim().length < 10) {
       setError("Description is too short. Please provide more details.");
       return;
     }
@@ -52,7 +61,6 @@ function ContactSupport() {
     setSubmitting(true);
 
     try {
-      // In a real app we'd use formData if there's a file
       const payload = new FormData();
       payload.append("category", formData.category);
       payload.append("subject", formData.subject);
@@ -61,40 +69,23 @@ function ContactSupport() {
       if (formData.load_id) payload.append("load_id", formData.load_id);
       if (file) payload.append("file", file);
 
-      // Attempt to post to a support endpoint (which might be missing)
-      const res = await api.post("/support/tickets", payload, {
-        headers: { "Content-Type": "multipart/form-data" }
-      });
+      const res = await api.post("/support/tickets", payload);
       
-      setSuccess(res.data?.data?.ticket_id || "SUP-TICKET");
+      if (!res.data?.ticket_id) throw new Error("The request could not be confirmed. Please try again.");
+      setSuccess(res.data.ticket_id);
     } catch (err) {
-      console.error(err);
-      // We do NOT fake a success response. We display the actual error.
-      // E.g., if endpoint is 404, we'll see it.
-      if (err.response?.status === 404) {
-        setError("Support API endpoint (/api/v1/support/tickets) is not implemented yet. Please contact backend team.");
-      } else {
-        setError("Failed to submit support request. Please try again.");
-      }
+      setError(errorMessage(err));
     } finally {
       setSubmitting(false);
     }
   };
 
   const handleCall = () => {
-    if (SUPPORT_PHONE) {
-      window.location.href = `tel:${SUPPORT_PHONE}`;
-    } else {
-      alert("Support phone number is not configured.");
-    }
+    if (SUPPORT_PHONE) window.location.href = `tel:${SUPPORT_PHONE}`;
   };
 
   const handleEmail = () => {
-    if (SUPPORT_EMAIL) {
-      window.location.href = `mailto:${SUPPORT_EMAIL}`;
-    } else {
-      alert("Support email is not configured.");
-    }
+    if (SUPPORT_EMAIL) window.location.href = `mailto:${SUPPORT_EMAIL}`;
   };
 
   return (
@@ -136,8 +127,8 @@ function ContactSupport() {
 
             <form onSubmit={handleSubmit}>
               <div className="support-form-group">
-                <label>Issue Category *</label>
-                <select name="category" value={formData.category} onChange={handleInputChange} required>
+                <label htmlFor="support-category">Issue Category *</label>
+                <select id="support-category" name="category" value={formData.category} onChange={handleInputChange} required>
                   <option value="">Select a category</option>
                   <option value="LOAD_ISSUE">Load Issue</option>
                   <option value="TRIP_ISSUE">Trip Issue</option>
@@ -152,10 +143,10 @@ function ContactSupport() {
               </div>
 
               <div className="support-form-group">
-                <label>Subject *</label>
+                <label htmlFor="support-subject">Subject *</label>
                 <input 
                   type="text" 
-                  name="subject" 
+                  id="support-subject" name="subject" maxLength={255}
                   placeholder="Brief description of the issue" 
                   value={formData.subject} 
                   onChange={handleInputChange} 
@@ -165,21 +156,21 @@ function ContactSupport() {
 
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px" }}>
                 <div className="support-form-group">
-                  <label>Trip ID (Optional)</label>
+                  <label htmlFor="support-trip_id">Trip ID (Optional)</label>
                   <input 
                     type="text" 
-                    name="trip_id" 
-                    placeholder="e.g. TR-1234" 
+                    id="support-trip_id" name="trip_id"
+                    placeholder="Trip number" inputMode="numeric" pattern="[1-9][0-9]*"
                     value={formData.trip_id} 
                     onChange={handleInputChange} 
                   />
                 </div>
                 <div className="support-form-group">
-                  <label>Load ID (Optional)</label>
+                  <label htmlFor="support-load_id">Load ID (Optional)</label>
                   <input 
                     type="text" 
-                    name="load_id" 
-                    placeholder="e.g. LD-9876" 
+                    id="support-load_id" name="load_id"
+                    placeholder="Load match number" inputMode="numeric" pattern="[1-9][0-9]*"
                     value={formData.load_id} 
                     onChange={handleInputChange} 
                   />
@@ -187,9 +178,9 @@ function ContactSupport() {
               </div>
 
               <div className="support-form-group">
-                <label>Description *</label>
+                <label htmlFor="support-description">Description *</label>
                 <textarea 
-                  name="description" 
+                  id="support-description" name="description" minLength={10} maxLength={10000}
                   placeholder="Please describe the issue in detail..." 
                   value={formData.description} 
                   onChange={handleInputChange} 
@@ -203,7 +194,7 @@ function ContactSupport() {
                   <Button variant="outline" fullWidth icon="upload" iconPosition="left">
                     {file ? file.name : "Choose File..."}
                   </Button>
-                  <input type="file" onChange={handleFileChange} />
+                  <input type="file" aria-label="Support attachment" accept=".jpg,.jpeg,.png,.pdf" onChange={handleFileChange} />
                 </div>
               </div>
 
@@ -218,27 +209,26 @@ function ContactSupport() {
             </form>
           </div>
         ) : (
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "20px" }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 280px), 1fr))", gap: "20px" }}>
             <SupportOptionCard 
               title="Call Support"
               description="Speak directly with our support team."
               icon="phone"
-              actionText={SUPPORT_PHONE ? "Call Now" : "Configure Phone"}
-              onClick={handleCall}
+              actionText={SUPPORT_PHONE ? "Call Now" : "Phone unavailable"}
+              disabled={!SUPPORT_PHONE} onClick={handleCall}
             />
             <SupportOptionCard 
               title="Email Support"
               description="Send your question to our support team."
               icon="mail"
-              actionText={SUPPORT_EMAIL ? "Send Email" : "Configure Email"}
-              onClick={handleEmail}
+              actionText={SUPPORT_EMAIL ? "Send Email" : "Email unavailable"}
+              disabled={!SUPPORT_EMAIL} onClick={handleEmail}
             />
             <SupportOptionCard 
               title="Chat with Support"
-              description="Chat live with a support representative."
+              description="Live support chat is not available yet. You can submit a ticket."
               icon="chat"
-              actionText="Start Chat"
-              onClick={() => alert("Live chat functionality is currently unavailable.")}
+              actionText="Live chat unavailable" disabled
             />
             <SupportOptionCard 
               title="Report a Problem"

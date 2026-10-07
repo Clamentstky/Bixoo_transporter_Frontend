@@ -1,385 +1,131 @@
-.weekly-settlement-page {
+.transporter-layout .weekly-settlement-page.ws-page,
+.weekly-settlement-page.ws-page {
+  display: block;
   width: 100%;
-  padding: 24px 16px 40px;
-  background: var(--bg-body, #f4f6fb);
   min-height: calc(100vh - 72px);
+  padding: 28px 40px 48px;
+  background: var(--ui-background);
   color: var(--ui-text);
   font-family: var(--font-family);
 }
+.ws-page .ws-container { width: 100%; max-width: 1100px; margin: 0 auto; }
+.ws-page .ws-back { display: inline-flex; align-items: center; gap: 8px; min-height: 40px; padding: 0; border: 0; background: transparent; color: var(--ui-muted); font-size: 13px; cursor: pointer; }
+.ws-page .ws-back:hover { color: var(--ui-purple); }
+.ws-page .ws-heading { display: flex; align-items: center; justify-content: space-between; gap: 24px; margin: 20px 0 28px; }
+.ws-page .ws-eyebrow { display: block; color: var(--ui-purple); font-size: 11px; font-weight: 750; letter-spacing: 1.7px; }
+.ws-page h1 { margin: 6px 0 8px; font-size: clamp(28px, 2.6vw, 36px); line-height: 1.2; font-weight: 750; letter-spacing: -1px; }
+.ws-page .ws-heading p { color: var(--ui-muted); font-size: 14px; line-height: 1.6; }
+.ws-page .ws-cycle { display: inline-flex; align-items: center; gap: 8px; flex-shrink: 0; padding: 9px 13px; border: 1px solid #e4dbef; border-radius: 24px; background: white; color: #79678e; font-size: 12px; font-weight: 600; }
+.ws-page .ws-overview { display: flex; align-items: center; justify-content: space-between; gap: 30px; padding: 30px 32px; margin-bottom: 26px; border: 1px solid #7648b5; border-radius: 20px; background: linear-gradient(112deg, #7547bd 0%, #5b328f 100%); color: white; box-shadow: 0 8px 24px #7040bd12; }
+.ws-page .ws-balance { min-width: 0; }
+.ws-page .ws-overview-label { display: flex; align-items: center; gap: 9px; color: #eee3fc; font-size: 13px; }
+.ws-page .ws-balance > strong { display: block; margin: 10px 0 7px; font-size: clamp(32px, 3.2vw, 43px); line-height: 1.2; letter-spacing: -1.1px; font-weight: 700; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+.ws-page .ws-balance-note { color: #e0ceed; font-size: 11px; }
+.ws-page .ws-overview-details { display: flex; gap: 28px; padding-left: 30px; border-left: 1px solid #ffffff2b; flex-shrink: 0; }
+.ws-page .ws-overview-stat { display: flex; align-items: center; gap: 12px; }
+.ws-page .ws-stat-icon { display: grid; place-items: center; width: 44px; height: 44px; flex-shrink: 0; border: 1px solid #ffffff25; border-radius: 13px; background: #ffffff0e; color: #ecdefb; }
+.ws-page .ws-overview-stat > div > span { display: block; color: #e1ceef; font-size: 12px; }
+.ws-page .ws-overview-stat strong { display: block; margin-top: 4px; color: white; font-size: 20px; font-weight: 600; }
+.ws-page .ws-overview-stat small { font-size: 12px; font-weight: 400; color: #e1ceef; }
+.ws-page .ws-grid { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(300px, 1fr); gap: 24px; align-items: start; }
+.ws-page .ws-trips-panel, .ws-page .ws-bank-panel, .ws-page .ws-breakdown { min-width: 0; border: 1px solid #e5dfed; border-radius: 18px; background: white; box-shadow: 0 3px 16px #34204f03; }
+.ws-page .ws-panel-heading { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 24px; border-bottom: 1px solid #f0ebf5; }
+.ws-page h2 { font-size: 16px; font-weight: 700; line-height: 1.4; letter-spacing: -.2px; }
+.ws-page .ws-panel-heading p { margin-top: 5px; color: var(--ui-muted); font-size: 12px; }
+.ws-page .ws-count { display: grid; place-items: center; min-width: 30px; height: 30px; padding: 0 8px; border-radius: 9px; background: #f3edfb; color: var(--ui-purple); font-size: 12px; font-weight: 700; }
+.ws-page .ws-trip-list { list-style: none; padding: 0 24px; margin: 0; }
+.ws-page .ws-trip { display: flex; align-items: center; gap: 13px; padding: 21px 0; }
+.ws-page .ws-trip + .ws-trip { border-top: 1px solid #f0ebf5; }
+.ws-page .ws-trip-icon { display: grid; place-items: center; width: 44px; height: 44px; flex-shrink: 0; border: 1px solid #eee7f6; border-radius: 12px; background: #faf7fe; color: #8a6caa; }
+.ws-page .ws-trip-info { min-width: 0; }
+.ws-page .ws-trip-info > strong { display: block; font-size: 14px; font-weight: 650; overflow-wrap: anywhere; }
+.ws-page .ws-trip-info > span { display: flex; align-items: center; gap: 5px; margin-top: 6px; color: var(--ui-muted); font-size: 11px; }
+.ws-page .ws-trip-amount { margin-left: auto; text-align: right; flex-shrink: 0; }
+.ws-page .ws-trip-amount > strong { display: block; font-size: 16px; font-weight: 700; font-variant-numeric: tabular-nums; color: var(--ui-purple); }
+.ws-page .ws-pending { display: inline-flex; align-items: center; gap: 5px; padding: 3px 7px; margin-top: 6px; border-radius: 5px; background: #fff6e8; color: #97620c; font-size: 10px; font-weight: 600; }
+.ws-page .ws-pending i { width: 4px; height: 4px; background: currentColor; border-radius: 50%; }
+.ws-page .ws-trips-footer { display: flex; align-items: center; gap: 8px; padding: 15px 24px; border-top: 1px solid #eee8f3; border-radius: 0 0 18px 18px; background: #fcfaff; color: #81718f; font-size: 11px; }
+.ws-page .ws-details { display: grid; gap: 20px; min-width: 0; }
+.ws-page .ws-bank-panel { padding: 22px 24px; }
+.ws-page .ws-bank-heading { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.ws-page .ws-bank-heading h2 { font-size: 14px; }
+.ws-page .ws-verified { display: inline-flex; align-items: center; gap: 4px; padding: 4px 8px; border-radius: 20px; color: #2b7b50; background: #edf7f0; font-size: 10px; font-weight: 600; }
+.ws-page .ws-bank-info { display: flex; align-items: center; gap: 12px; margin-top: 18px; }
+.ws-page .ws-bank-icon { display: grid; place-items: center; width: 44px; height: 44px; border: 1px solid #e9e0f3; border-radius: 12px; background: #f8f4fd; color: var(--ui-purple); }
+.ws-page .ws-bank-info strong { display: block; font-size: 14px; font-weight: 650; }
+.ws-page .ws-bank-info div > span { display: block; margin-top: 4px; color: var(--ui-muted); font-size: 12px; letter-spacing: 1px; }
+.ws-page .ws-breakdown { padding: 24px; }
+.ws-page .ws-breakdown-heading { display: flex; align-items: center; gap: 9px; margin-bottom: 24px; }
+.ws-page .ws-breakdown-heading > svg { color: #917ba5; }
+.ws-page .ws-breakdown-rows > div { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 18px; font-size: 12px; }
+.ws-page .ws-breakdown-rows dt { color: var(--ui-muted); }
+.ws-page .ws-breakdown-rows dd { margin: 0; text-align: right; font-variant-numeric: tabular-nums; font-weight: 650; overflow-wrap: anywhere; min-width: 0; }
+.ws-page .ws-deduction dt > span { display: inline-block; margin-left: 5px; padding: 1px 5px; border-radius: 4px; background: #f6f3f9; color: #887794; font-size: 10px; }
+.ws-page .ws-deduction dd { color: #aa5b61; }
+.ws-page .ws-breakdown-rows .ws-net { margin-top: 24px; padding-top: 20px; border-top: 1px dashed #dfd5e9; }
+.ws-page .ws-net dt { color: var(--ui-text); font-weight: 650; font-size: 14px; }
+.ws-page .ws-net dd { color: var(--ui-purple); font-size: 25px; letter-spacing: -.5px; }
+.ws-page .ws-actions { display: grid; gap: 10px; margin-top: 24px; }
+.ws-page .ws-actions button { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; min-height: 46px; padding: 10px 12px; border-radius: 10px; cursor: pointer; font-size: 13px; font-weight: 600; transition: background 150ms; }
+.ws-page .ws-primary { background: var(--ui-purple); color: white; border: 1px solid var(--ui-purple); box-shadow: 0 4px 12px #7040bd12; }
+.ws-page .ws-primary > svg:last-child { margin-left: auto; }
+.ws-page .ws-primary > svg:first-child { margin-right: auto; }
+.ws-page .ws-primary:hover { background: var(--ui-purple-dark); }
+.ws-page .ws-secondary { background: white; border: 1px solid #e5deed; color: #76638c; }
+.ws-page .ws-secondary:hover { background: #f8f4fd; }
+.ws-page .ws-empty { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 260px; padding: 32px 24px; text-align: center; }
+.ws-page .ws-empty-icon { display: grid; place-items: center; width: 60px; height: 60px; margin-bottom: 18px; border: 1px solid #e9e0f3; border-radius: 18px; background: #f7f2fc; color: #9a7fb5; }
+.ws-page .ws-empty h3 { font-size: 15px; font-weight: 650; line-height: 1.6; }
+.ws-page .ws-empty p { margin-top: 6px; color: var(--ui-muted); font-size: 12px; line-height: 1.6; }
 
-.weekly-settlement-container {
-  width: 100%;
-  max-width: 720px;
-  margin: 0 auto;
+@media (max-width: 1200px) and (min-width: 1001px) {
+  .transporter-layout .weekly-settlement-page.ws-page { padding-inline: 28px; }
+  .ws-page .ws-overview { padding: 26px; gap: 20px; }
+  .ws-page .ws-overview-details { gap: 20px; padding-left: 24px; }
+  .ws-page .ws-stat-icon { display: none; }
+  .ws-page .ws-grid { gap: 18px; }
+  .ws-page .ws-panel-heading, .ws-page .ws-bank-panel, .ws-page .ws-breakdown { padding: 20px; }
+  .ws-page .ws-trip-list { padding-inline: 20px; }
+  .ws-page .ws-trip-icon { width: 36px; height: 40px; }
 }
 
-@media (min-width: 1024px) {
-  .weekly-settlement-container {
-    max-width: 760px;
-  }
+@media (max-width: 760px) {
+  .transporter-layout .weekly-settlement-page.ws-page, .weekly-settlement-page.ws-page { padding: 16px 20px 32px; }
+  .ws-page .ws-heading { margin: 14px 0 24px; }
+  .ws-page h1 { font-size: 29px; }
+  .ws-page .ws-heading p { max-width: 300px; font-size: 13px; }
+  .ws-page .ws-cycle { display: none; }
+  .ws-page .ws-overview { display: block; padding: 24px; border-radius: 18px; margin-bottom: 20px; }
+  .ws-page .ws-balance > strong { font-size: 38px; }
+  .ws-page .ws-overview-details { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; margin-top: 22px; padding: 20px 0 0; border-left: 0; border-top: 1px solid #ffffff2b; }
+  .ws-page .ws-overview-stat { gap: 9px; align-items: flex-start; }
+  .ws-page .ws-stat-icon { width: 30px; height: 34px; border: 0; background: transparent; justify-items: start; }
+  .ws-page .ws-stat-icon svg { width: 19px; height: 19px; }
+  .ws-page .ws-overview-stat > div > span { font-size: 11px; }
+  .ws-page .ws-overview-stat strong { font-size: 17px; }
+  .ws-page .ws-grid { grid-template-columns: minmax(0, 1fr); gap: 20px; }
+  .ws-page .ws-panel-heading { padding: 20px; }
+  .ws-page .ws-trip-list { padding-inline: 20px; }
+  .ws-page .ws-trip { padding-block: 19px; gap: 11px; }
+  .ws-page .ws-trip-icon { width: 38px; height: 40px; }
+  .ws-page .ws-trip-info > strong { font-size: 13px; }
+  .ws-page .ws-trip-amount > strong { font-size: 15px; }
+  .ws-page .ws-trips-footer { padding-inline: 20px; }
+  .ws-page .ws-details { gap: 18px; }
+  .ws-page .ws-bank-panel, .ws-page .ws-breakdown { padding: 22px; }
+  .ws-page .ws-actions button { min-height: 48px; }
 }
 
-.weekly-header {
-  margin-bottom: 24px;
-}
-
-.weekly-header .back-btn {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  background: none;
-  border: none;
-  color: var(--ui-secondary);
-  font-size: 14px;
-  font-weight: 500;
-  cursor: pointer;
-  padding: 0;
-  margin-bottom: 16px;
-  transition: color 0.2s;
-}
-
-.weekly-header .back-btn:hover {
-  color: var(--ui-purple);
-}
-
-.weekly-eyebrow {
-  display: block;
-  font-size: 12px;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: var(--ui-purple);
-  font-weight: 700;
-  margin-bottom: 4px;
-}
-
-.weekly-title {
-  font-size: 28px;
-  font-weight: 700;
-  color: var(--ui-text);
-  margin: 0 0 4px 0;
-}
-
-@media (min-width: 1024px) {
-  .weekly-title {
-    font-size: 32px;
-  }
-}
-
-.weekly-subtitle {
-  font-size: 15px;
-  color: var(--ui-secondary);
-  margin: 0;
-}
-
-.settlement-summary-card {
-  background: linear-gradient(135deg, #fdfcff 0%, #f6f2fb 100%);
-  border: 1px solid #E6DFF0;
-  border-radius: 18px;
-  padding: 24px;
-  margin-bottom: 24px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.summary-value {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.summary-value small {
-  font-size: 14px;
-  font-weight: 500;
-  color: var(--ui-secondary);
-}
-
-.summary-value strong {
-  font-size: 34px;
-  font-weight: 700;
-  color: var(--ui-purple);
-  line-height: 1;
-}
-
-.summary-meta {
-  text-align: right;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.summary-meta small {
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--ui-secondary);
-}
-
-.summary-meta span {
-  font-size: 15px;
-  font-weight: 600;
-  color: var(--ui-text);
-}
-
-.bank-account-card {
-  background: white;
-  border: 1px solid #E9E3F1;
-  border-radius: 14px;
-  padding: 16px 20px;
-  margin-bottom: 32px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.bank-info {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.bank-icon {
-  width: 40px;
-  height: 40px;
-  background: #f4f6fb;
-  border-radius: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--ui-purple);
-}
-
-.bank-details {
-  display: flex;
-  flex-direction: column;
-}
-
-.bank-details strong {
-  font-size: 15px;
-  font-weight: 600;
-  color: var(--ui-text);
-}
-
-.bank-details span {
-  font-size: 14px;
-  color: var(--ui-secondary);
-}
-
-.bank-verified {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  background: #e6f6eb;
-  color: #16a34a;
-  padding: 4px 10px;
-  border-radius: 999px;
-  font-size: 12px;
-  font-weight: 600;
-}
-
-.section-title {
-  font-size: 18px;
-  font-weight: 700;
-  color: var(--ui-text);
-  margin: 0 0 16px 0;
-}
-
-.included-trips-section {
-  margin-bottom: 32px;
-}
-
-.trip-list {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.trip-card {
-  background: white;
-  border: 1px solid #E9E3F1;
-  border-radius: 14px;
-  padding: 16px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.trip-card-left {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.trip-card-left strong {
-  font-size: 15px;
-  font-weight: 600;
-  color: var(--ui-text);
-}
-
-.trip-card-left span {
-  font-size: 13px;
-  color: var(--ui-secondary);
-}
-
-.trip-card-right {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 4px;
-}
-
-.trip-card-right strong {
-  font-size: 16px;
-  font-weight: 700;
-  color: var(--ui-purple);
-}
-
-.status-badge-pending {
-  background: #fff3e0;
-  color: #ea580c;
-  padding: 4px 8px;
-  border-radius: 4px;
-  font-size: 11px;
-  font-weight: 700;
-  text-transform: uppercase;
-}
-
-.breakdown-card {
-  background: white;
-  border: 1px solid #E9E3F1;
-  border-radius: 18px;
-  padding: 24px;
-  margin-bottom: 32px;
-}
-
-.breakdown-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 16px;
-}
-
-.breakdown-row:last-child {
-  margin-bottom: 0;
-}
-
-.breakdown-row span {
-  font-size: 15px;
-  color: var(--ui-secondary);
-}
-
-.breakdown-row strong {
-  font-size: 15px;
-  font-weight: 600;
-  color: var(--ui-text);
-}
-
-.breakdown-row.deduction strong {
-  color: #ef4444;
-}
-
-.breakdown-divider {
-  border-bottom: 1px dashed #E9E3F1;
-  margin: 16px 0;
-}
-
-.breakdown-total {
-  margin-bottom: 0;
-}
-
-.breakdown-total span {
-  font-size: 16px;
-  font-weight: 600;
-  color: var(--ui-text);
-}
-
-.breakdown-total strong {
-  font-size: 22px;
-  font-weight: 700;
-  color: var(--ui-purple);
-}
-
-.page-actions {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.btn-primary-action {
-  width: 100%;
-  height: 48px;
-  background: var(--ui-purple);
-  color: white;
-  border: none;
-  border-radius: 12px;
-  font-size: 15px;
-  font-weight: 600;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: background 0.2s;
-}
-
-.btn-primary-action:hover {
-  background: var(--ui-purple-accent, #502187);
-}
-
-.btn-secondary-action {
-  width: 100%;
-  height: 48px;
-  background: white;
-  color: var(--ui-purple);
-  border: 1px solid #DDD5EA;
-  border-radius: 12px;
-  font-size: 15px;
-  font-weight: 600;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: background 0.2s;
-}
-
-.btn-secondary-action:hover {
-  background: #fdfcff;
-  border-color: var(--ui-purple);
-}
-
-/* Empty State Override */
-.empty-state-card {
-  background: white;
-  border: 1px solid #E9E3F1;
-  border-radius: 16px;
-  padding: 40px 24px;
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
-
-.empty-state-card .icon-circle {
-  width: 56px;
-  height: 56px;
-  background: #f4f6fb;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--ui-secondary);
-  margin-bottom: 16px;
-}
-
-.empty-state-card h3 {
-  font-size: 16px;
-  font-weight: 600;
-  color: var(--ui-text);
-  margin: 0 0 8px 0;
-}
-
-.empty-state-card p {
-  font-size: 14px;
-  color: var(--ui-secondary);
-  margin: 0;
-  line-height: 1.5;
+@media (max-width: 380px) {
+  .transporter-layout .weekly-settlement-page.ws-page, .weekly-settlement-page.ws-page { padding-inline: 14px; }
+  .ws-page h1 { font-size: 27px; }
+  .ws-page .ws-overview { padding: 20px; }
+  .ws-page .ws-overview-details { gap: 12px; }
+  .ws-page .ws-stat-icon { display: none; }
+  .ws-page .ws-panel-heading, .ws-page .ws-bank-panel, .ws-page .ws-breakdown { padding: 18px; }
+  .ws-page .ws-trip-list { padding-inline: 16px; }
+  .ws-page .ws-trip { gap: 8px; }
+  .ws-page .ws-trip-icon { width: 32px; height: 36px; }
+  .ws-page .ws-trip-info > span { font-size: 10px; }
+  .ws-page .ws-trip-amount > strong { font-size: 14px; }
 }

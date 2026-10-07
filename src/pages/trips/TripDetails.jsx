@@ -5,7 +5,7 @@ import api from "../../services/api";
 import EmptyState from "../../components/ui/EmptyState";
 import Button from "../../components/ui/Button";
 import LiveLocationPanel from "../../components/location/LiveLocationPanel";
-import { ACTIVE_TRIP_STATUSES } from "../../context/LocationTrackingContext";
+import { formatDate } from "../../services/display";
 import "./TripDetails.css";
 
 function TripDetails() {
@@ -18,7 +18,7 @@ function TripDetails() {
 
   useEffect(() => {
     const fetchTrip = async () => {
-      setLoading(true);
+      setLoading(true); setError(null);
       try {
         const res = await api.get(`/transporter/trips/${tripId}`);
         if (res.data) {
@@ -73,7 +73,17 @@ function TripDetails() {
   }
 
   const { request } = trip;
-  const isCompleted = !ACTIVE_TRIP_STATUSES.includes(trip.status);
+  const isCompleted = ["COMPLETED", "CANCELLED"].includes(trip.status);
+  const lifecycle = [
+    ["ACCEPTED", "Accepted", trip.accepted_at],
+    ["GOING_TO_PICKUP", "Heading to pickup", trip.going_to_pickup_at],
+    ["PICKED_UP", "Goods picked up", trip.picked_up_at],
+    ["IN_TRANSIT", "In transit", trip.started_at],
+    ["AT_DELIVERY", "At delivery", trip.reached_delivery_at],
+    ["DELIVERED", "Delivery confirmed", trip.delivered_at],
+    ["COMPLETED", "Trip completed", trip.completed_at],
+  ];
+  const currentStep = lifecycle.findIndex(([status]) => status === trip.status);
 
   return (
     <div className="trip-details-page">
@@ -95,7 +105,7 @@ function TripDetails() {
             <div>
               <small>Pickup</small>
               <strong>{request?.pickup_city || "Unknown"}</strong>
-              <p>{request?.pickup_location}</p>
+              <p>{request?.pickup_address}</p>
             </div>
           </div>
 
@@ -110,7 +120,7 @@ function TripDetails() {
             <div>
               <small>Delivery</small>
               <strong>{request?.delivery_city || "Unknown"}</strong>
-              <p>{request?.delivery_location}</p>
+              <p>{request?.delivery_address}</p>
             </div>
           </div>
         </div>
@@ -139,29 +149,17 @@ function TripDetails() {
           </div>
         </div>
         <div className="trip-timeline">
-          <div className={`timeline-item ${trip.accepted_at ? 'completed' : 'active'}`}>
-            <div className="timeline-marker"><Icon name={trip.accepted_at ? "check" : "truck"} size={20} /></div>
-            <div className="timeline-content">
-              <strong>Accepted</strong>
-              <span>{trip.accepted_at ? new Date(trip.accepted_at).toLocaleString() : "Waiting for pickup"}</span>
-            </div>
-          </div>
-          <div className={`timeline-line ${trip.started_at ? 'active-line' : ''}`}></div>
-          <div className={`timeline-item ${trip.started_at ? (trip.completed_at ? 'completed' : 'active') : ''}`}>
-            <div className="timeline-marker">{trip.started_at ? <Icon name={trip.completed_at ? "check" : "truck"} size={20} /> : "2"}</div>
-            <div className="timeline-content">
-              <strong>In Transit</strong>
-              <span>{trip.started_at ? `Started ${new Date(trip.started_at).toLocaleString()}` : "Not started yet"}</span>
-            </div>
-          </div>
-          <div className={`timeline-line ${trip.completed_at ? 'active-line' : ''}`}></div>
-          <div className={`timeline-item ${trip.completed_at ? 'completed' : ''}`}>
-            <div className="timeline-marker">{trip.completed_at ? <Icon name="check" size={20} /> : "3"}</div>
-            <div className="timeline-content">
-              <strong>Delivered</strong>
-              <span>{trip.completed_at ? new Date(trip.completed_at).toLocaleString() : "Pending"}</span>
-            </div>
-          </div>
+          {lifecycle.map(([status, label, timestamp], index) => {
+            const completed = index < currentStep || trip.status === "COMPLETED";
+            const active = index === currentStep && trip.status !== "COMPLETED";
+            return <div key={status}>
+              <div className={`timeline-item ${completed ? "completed" : ""} ${active ? "active" : ""}`}>
+                <div className="timeline-marker">{completed ? <Icon name="check" size={17} /> : active ? <Icon name="truck" size={17} /> : index + 1}</div>
+                <div className="timeline-content"><strong>{label}</strong><span>{timestamp ? formatDate(timestamp) : active ? "Current step" : "Pending"}</span></div>
+              </div>
+              {index < lifecycle.length - 1 && <div className={`timeline-line ${completed ? "active-line" : ""}`} />}
+            </div>;
+          })}
         </div>
       </section>
 
@@ -183,12 +181,12 @@ function TripDetails() {
           </div>
           <div className="load-info-box">
             <span>Vehicle</span>
-            <strong>Your Vehicle</strong>
+            <strong>{trip.vehicle_id ? `Vehicle #${trip.vehicle_id}` : "Not assigned"}</strong>
           </div>
           <div className="load-info-box">
             <span>Earnings</span>
             <strong className="earning-value">
-              {request?.estimated_price ? `₹${Number(request.estimated_price).toLocaleString()}` : "-"}
+              {request?.offered_amount ? `₹${Number(request.offered_amount).toLocaleString()}` : "-"}
             </strong>
           </div>
         </div>
@@ -199,8 +197,8 @@ function TripDetails() {
           <Button variant="secondary" size="lg" icon="chat" iconPosition="left" onClick={handleChat}>
             Message
           </Button>
-          <Button variant="primary" size="lg" onClick={trip.status === "IN_TRANSIT" ? handleDelivery : handleStartTrip}>
-            {trip.status === "IN_TRANSIT" ? "Confirm Delivery" : "Start Navigation"}
+          <Button variant="primary" size="lg" onClick={["IN_TRANSIT", "AT_DELIVERY", "DELIVERED"].includes(trip.status) ? handleDelivery : handleStartTrip}>
+            {["IN_TRANSIT", "AT_DELIVERY", "DELIVERED"].includes(trip.status) ? "Confirm Delivery" : "Start Navigation"}
           </Button>
         </section>
       )}
@@ -212,7 +210,7 @@ function TripDetails() {
         </div>
         <div>
           <span>Estimated Earnings</span>
-          <strong>{request?.estimated_price ? `₹${Number(request.estimated_price).toLocaleString()}` : "-"}</strong>
+          <strong>{request?.offered_amount ? `₹${Number(request.offered_amount).toLocaleString()}` : "-"}</strong>
         </div>
       </div>
     </div>

@@ -25,6 +25,9 @@
 .freight-point strong { font-size: var(--font-section); line-height: 1.3; overflow-wrap: anywhere; }
 .freight-meta { display: flex; gap: 10px; align-items: baseline; flex-wrap: wrap; margin-top: auto; font-size: var(--font-secondary); color: var(--ui-muted); }
 .freight-meta strong { color: var(--ui-text); }
+.freight-load-details { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 14px; color: var(--ui-muted); font-size: var(--font-meta); }
+.freight-load-details > span { display: inline-flex; align-items: center; gap: 6px; min-width: 0; overflow-wrap: anywhere; }
+.freight-load-details > strong { flex: 0 0 auto; color: var(--ui-purple); font-size: var(--font-meta); }
 .freight-footer { margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--ui-border); width: 100%; }
 .freight-footer .freight-cta { color: var(--ui-purple); font-weight: 700; }
-@media (max-width: 600px) { .freight-card { padding: 20px; } }
+@media (max-width: 600px) { .freight-card { padding: 20px; } .freight-load-details { align-items: flex-start; flex-direction: column; gap: 7px; } }

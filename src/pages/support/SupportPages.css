@@ -103,3 +103,10 @@
     padding: 16px;
   }
 }
+
+@media (max-width: 480px) {
+  .faq-categories {
+    flex-wrap: wrap;
+    overflow-x: visible;
+  }
+}

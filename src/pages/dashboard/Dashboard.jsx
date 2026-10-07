@@ -9,6 +9,9 @@ import Button from "../../components/ui/Button";
 import StatusBadge from "../../components/ui/StatusBadge";
 import api from "../../services/api";
 import "./Dashboard.css";
+import EmptyState from "../../components/ui/EmptyState";
+import { errorMessage } from "../../services/session";
+import { formatDate } from "../../services/display";
 
 function Dashboard() {
   const navigate = useNavigate();
@@ -26,39 +29,51 @@ function Dashboard() {
   const [activeTrip, setActiveTrip] = useState(null);
   const [recentLoads, setRecentLoads] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const [attempt, setAttempt] = useState(0);
 
   useEffect(() => {
+    let active = true;
+    setLoading(true); setError("");
     const fetchDashboard = async () => {
       try {
-        const dashboardRes = await api.get("/transporter/dashboard");
+        const [dashboardRes, loadsRes] = await Promise.all([
+          api.get("/transporter/dashboard"), api.get("/transporter/loads?limit=2")
+        ]);
+        if (!active) return;
         if (dashboardRes.data) {
           setStats(dashboardRes.data.stats);
           setActiveTrip(dashboardRes.data.active_trip);
         }
         
         // Fetch a few available loads for the dashboard
-        const loadsRes = await api.get("/transporter/loads?limit=2");
         if (loadsRes.data) {
           const mappedLoads = loadsRes.data.map(item => ({
             id: item.match_id,
             status: item.match_status === "PENDING" ? "NEW LOAD" : item.match_status,
-            distance: `${item.distance_from_pickup || 0} km away`,
+            distance: item.distance_from_pickup != null ? `${item.distance_from_pickup} km away` : "Distance unavailable",
             pickup: item.request.pickup_city,
             delivery: item.request.delivery_city,
             weight: `${item.request.weight} ${item.request.weight_unit}`,
             type: item.request.goods_name,
-            start: item.request.pickup_time || "Flexible"
+            vehicle: item.request.required_vehicle_type,
+            start: formatDate(item.request.pickup_date),
+            payout: item.request.offered_amount
           }));
           setRecentLoads(mappedLoads);
         }
       } catch (error) {
-        console.error("Error fetching dashboard data:", error);
+        if (active) setError(errorMessage(error));
       } finally {
-        setLoading(false);
+        if (active) setLoading(false);
       }
     };
     fetchDashboard();
-  }, []);
+    return () => { active = false; };
+  }, [attempt]);
+
+  if (loading) return <div className="ui-page" role="status">Loading dashboard...</div>;
+  if (error) return <div className="ui-page"><EmptyState title="Dashboard unavailable" description={error} action={{ label: "Retry", onClick: () => setAttempt(value => value + 1) }} /></div>;
 
   const summary = [
     [stats.available_loads.toString(), "Available Loads"],
@@ -89,7 +104,7 @@ function Dashboard() {
 
       <section className="dashboard-section">
         <div className="ui-section-header">
-          <h2>Available Loads</h2>
+          <h2>Direct load matches</h2>
           <Button variant="link" icon="arrow" iconPosition="right" onClick={() => navigate("/loads")}>View all loads</Button>
         </div>
         <div className="available-loads">
@@ -100,7 +115,7 @@ function Dashboard() {
               <LoadCard key={load.id} load={load} onClick={() => navigate(`/loads/${load.id}`)} />
             ))
           ) : (
-            <p>No available loads at the moment.</p>
+            <p>No direct load matches are available at the moment.</p>
           )}
         </div>
       </section>

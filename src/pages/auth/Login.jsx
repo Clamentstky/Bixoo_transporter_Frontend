@@ -29,7 +29,8 @@ function Login() {
     setLoading(true);
     try {
       await login(email, password);
-      navigate("/dashboard", { replace: true });
+      const from = location.state?.from;
+      navigate(typeof from === "string" && from.startsWith("/") && !from.startsWith("//") && !["/login", "/onboarding"].includes(from) ? from : "/dashboard", { replace: true });
     } catch (err) {
       setError(errorMessage(err, "Invalid credentials."));
     } finally {
@@ -110,7 +111,6 @@ function Login() {
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  tabIndex="-1"
                   style={{
                     background: "none",
                     border: "none",

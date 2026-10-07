@@ -7,6 +7,7 @@ import EmptyState from "../../components/ui/EmptyState";
 import Button from "../../components/ui/Button";
 import FilterPill from "../../components/ui/FilterPill";
 import api from "../../services/api";
+import { pageNumber } from "../../services/display";
 import "./MyTrips.css";
 
 function MyTrips() {
@@ -15,7 +16,9 @@ function MyTrips() {
 
   const activeTab = params.get("tab") || "active";
   const query = params.get("search") || "";
-  const page = parseInt(params.get("page") || "1", 10);
+  const [searchText, setSearchText] = useState(query);
+  useEffect(() => { setSearchText(query); }, [query]);
+  const page = pageNumber(params.get("page"));
   const limit = 10;
 
   const [trips, setTrips] = useState([]);
@@ -33,7 +36,8 @@ function MyTrips() {
     if (abortControllerRef.current) {
       abortControllerRef.current.abort();
     }
-    abortControllerRef.current = new AbortController();
+    const controller = new AbortController();
+    abortControllerRef.current = controller;
 
     const currentTab = searchParams.get("tab") || "active";
     let statuses = "ACCEPTED,GOING_TO_PICKUP,PICKED_UP,IN_TRANSIT,AT_DELIVERY,DELIVERED";
@@ -44,28 +48,28 @@ function MyTrips() {
         params: {
           search: searchParams.get("search") || undefined,
           statuses,
-          page: searchParams.get("page") || 1,
+          page: pageNumber(searchParams.get("page")),
           limit
         },
-        signal: abortControllerRef.current.signal
+        signal: controller.signal
       });
       
-      if (res.data) {
+      if (!controller.signal.aborted && res.data) {
         const mappedTrips = res.data.map(t => {
           const isCompleted = t.status === "COMPLETED" || t.status === "CANCELLED";
           return {
             id: t.trip_code,
             internalId: t.id,
-            loadId: t.request?.request_code || `LD-${t.request?.id}` || "Unknown",
+            loadId: t.request?.request_code || "Not provided",
             pickup: t.request?.pickup_city || "Unknown",
             pickupPoint: t.request?.pickup_address || t.request?.pickup_location || "Unknown location",
             delivery: t.request?.delivery_city || "Unknown",
             deliveryPoint: t.request?.delivery_address || t.request?.delivery_location || "Unknown location",
             weight: t.request ? `${t.request.weight} ${t.request.weight_unit}` : "",
             load: t.request?.goods_name || "",
-            vehicle: "Your Vehicle",
-            distance: t.request ? `${t.request.estimated_distance} km` : "",
-            payout: t.request ? `₹${Number(t.request.offered_amount || t.request.estimated_price).toLocaleString()}` : "",
+            vehicle: t.vehicle_id ? `Vehicle #${t.vehicle_id}` : "Not assigned",
+            distance: t.request?.estimated_distance != null ? `${t.request.estimated_distance} km` : "Not provided",
+            payout: t.request ? `₹${Number(t.request.offered_amount).toLocaleString()}` : "",
             status: t.status,
             type: isCompleted ? "completed" : "active",
           };
@@ -79,7 +83,7 @@ function MyTrips() {
         setError(true);
       }
     } finally {
-      if (abortControllerRef.current && !abortControllerRef.current.signal.aborted) {
+      if (!controller.signal.aborted) {
         setLoading(false);
       }
     }
@@ -89,6 +93,7 @@ function MyTrips() {
     fetchTrips(params);
     return () => {
       if (abortControllerRef.current) abortControllerRef.current.abort();
+      clearTimeout(debounceRef.current);
     };
   }, [params]);
 
@@ -101,6 +106,7 @@ function MyTrips() {
   
   const handleSearch = (e) => {
     const val = e.target.value;
+    setSearchText(val);
     if (debounceRef.current) clearTimeout(debounceRef.current);
     
     debounceRef.current = setTimeout(() => {
@@ -119,6 +125,7 @@ function MyTrips() {
   };
   
   const handleReset = () => {
+    clearTimeout(debounceRef.current); setSearchText("");
     const next = new URLSearchParams();
     next.set("tab", activeTab); // keep current tab
     setParams(next);
@@ -145,8 +152,9 @@ function MyTrips() {
           <Icon name="search" />
           <input 
             type="search" 
+            aria-label="Search trips"
             placeholder="Search by Trip ID, Order ID, City, or Goods..." 
-            defaultValue={query} 
+            value={searchText}
             onChange={handleSearch} 
           />
         </label>

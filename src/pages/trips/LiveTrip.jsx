@@ -40,18 +40,10 @@ function LiveTrip() {
 
   const advanceStatusTo = async (targetStatus) => {
     if (!trip) return;
-    const flow = ["ACCEPTED", "GOING_TO_PICKUP", "PICKED_UP", "IN_TRANSIT", "AT_DELIVERY", "DELIVERED", "COMPLETED"];
     try {
-      let current = trip.status;
-      const targetIdx = flow.indexOf(targetStatus);
-      if (targetIdx === -1) return;
-      while (flow.indexOf(current) < targetIdx && flow.indexOf(current) !== -1) {
-        const nextStatus = flow[flow.indexOf(current) + 1];
-        const res = await api.patch(`/transporter/trips/${tripId}/status`, { status: nextStatus });
-        current = nextStatus;
-        setTrip(previous => ({ ...previous, ...res.data }));
-      }
-      return current === targetStatus;
+      const res = await api.patch(`/transporter/trips/${tripId}/status`, { status: targetStatus });
+      setTrip(previous => ({ ...previous, ...res.data }));
+      return res.data.status === targetStatus;
     } catch (err) {
       setError(errorMessage(err, "Unable to update trip status."));
       return false;
@@ -61,8 +53,11 @@ function LiveTrip() {
   const handleDelivery = async () => {
     if (trip && !advancing) {
       setAdvancing(true); setError("");
-      const ready = ["IN_TRANSIT", "AT_DELIVERY"].includes(trip.status) || await advanceStatusTo("IN_TRANSIT");
-      if (ready) navigate(`/trips/${trip.id}/delivery`);
+      if (["IN_TRANSIT", "AT_DELIVERY", "DELIVERED"].includes(trip.status)) navigate(`/trips/${trip.id}/delivery`);
+      else {
+        const next = { ACCEPTED: "GOING_TO_PICKUP", GOING_TO_PICKUP: "PICKED_UP", PICKED_UP: "IN_TRANSIT" }[trip.status];
+        if (next) await advanceStatusTo(next);
+      }
       setAdvancing(false);
     }
   };

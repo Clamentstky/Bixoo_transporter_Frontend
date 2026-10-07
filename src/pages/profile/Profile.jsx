@@ -26,7 +26,7 @@ function Profile() {
       api.get("/transporter/profile"),
       api.get("/transporter/vehicles"),
       api.get("/transporter/wallet"),
-      documentService.getDocumentStatus().catch(() => []) // Add docs
+      documentService.getDocumentStatus()
     ])
       .then(([profileRes, vehicles, wallet, docs]) => {
         if (active) {
@@ -173,10 +173,10 @@ function Profile() {
             <div className="vehicle-details">
               <strong>{profile.vehicleType}</strong>
               <span>{profile.vehicleNumber}</span>
-              <small>{profile.capacity || "20 Tons"} Load Capacity</small>
+              <small>{profile.capacity} Load Capacity</small>
             </div>
 
-            <StatusBadge status="Active" dot />
+            <StatusBadge status={account.vehicle?.status || "Not assigned"} dot />
           </div>
         </section>
 
@@ -195,6 +195,7 @@ function Profile() {
                 role="button" 
                 tabIndex={0}
                 onClick={() => navigate("/profile/documents")}
+                onKeyDown={event => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); navigate("/profile/documents"); } }}
                 style={{ cursor: "pointer" }}
               >
                 <div className="document-icon">
