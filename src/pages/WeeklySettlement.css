@@ -77,6 +77,36 @@
 .ws-page .ws-empty-icon { display: grid; place-items: center; width: 60px; height: 60px; margin-bottom: 18px; border: 1px solid #e9e0f3; border-radius: 18px; background: #f7f2fc; color: #9a7fb5; }
 .ws-page .ws-empty h3 { font-size: 15px; font-weight: 650; line-height: 1.6; }
 .ws-page .ws-empty p { margin-top: 6px; color: var(--ui-muted); font-size: 12px; line-height: 1.6; }
+.ws-page .ws-alert, .ws-page .ws-notice { display: flex; align-items: center; gap: 8px; margin: 0 0 18px; padding: 12px 14px; border-radius: 10px; font-size: 13px; }
+.ws-page .ws-alert { border: 1px solid #f0c8ce; background: #fff3f4; color: #a34450; }
+.ws-page .ws-notice { border: 1px solid #cdebd8; background: #f0fbf4; color: #26764b; }
+.ws-page .ws-check { width: 17px; height: 17px; flex: 0 0 17px; accent-color: var(--ui-purple); }
+.ws-page .ws-status-approved { background: #edf7f0; color: #27764c; }
+.ws-page .ws-status-processing { background: #eee8fc; color: var(--ui-purple); }
+.ws-page .ws-status-paid { background: #e5f7ee; color: #23764b; }
+.ws-page .ws-status-failed { background: #fff0f1; color: #a34851; }
+.ws-page .ws-bank-panel p.ws-help { margin: 12px 0 16px; color: var(--ui-muted); font-size: 12px; line-height: 1.55; }
+.ws-page .ws-field { display: grid; gap: 6px; margin-top: 12px; }
+.ws-page .ws-field > span { color: var(--ui-text); font-size: 12px; font-weight: 650; }
+.ws-page .ws-field input, .ws-page .ws-field select { width: 100%; height: 42px; padding: 0 11px; border: 1px solid #ddd5e5; border-radius: 9px; outline: 0; color: var(--ui-text); font: inherit; font-size: 12px; background: white; }
+.ws-page .ws-field input:focus, .ws-page .ws-field select:focus { border-color: var(--ui-purple); box-shadow: 0 0 0 3px #7040bd1a; }
+.ws-page .ws-bank-form { display: grid; gap: 2px; margin-bottom: 14px; padding: 14px; border: 1px solid #ede5f5; border-radius: 12px; background: #fcfaff; }
+.ws-page .ws-form-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 12px; }
+.ws-page .ws-withdraw-total { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: 18px; padding-top: 16px; border-top: 1px dashed #dfd5e9; color: var(--ui-muted); font-size: 12px; }
+.ws-page .ws-withdraw-total strong { color: var(--ui-purple); font-size: 20px; font-variant-numeric: tabular-nums; }
+.ws-page .ws-withdraw { margin-top: 14px; }
+.ws-page .ws-inline-note { margin: 9px 0 0; color: var(--ui-muted); font-size: 11px; line-height: 1.4; }
+.ws-page .ws-history { margin-top: 24px; min-width: 0; border: 1px solid #e5dfed; border-radius: 18px; background: white; box-shadow: 0 3px 16px #34204f03; }
+.ws-page .ws-withdrawal-list { padding: 0 24px; }
+.ws-page .ws-withdrawal { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px 14px; padding: 17px 0; border-bottom: 1px solid #f0ebf5; }
+.ws-page .ws-withdrawal:last-child { border-bottom: 0; }
+.ws-page .ws-withdrawal > div:last-of-type { text-align: right; }
+.ws-page .ws-withdrawal strong { display: block; color: var(--ui-text); font-size: 13px; font-weight: 700; }
+.ws-page .ws-withdrawal > div:last-of-type > strong { color: var(--ui-purple); font-variant-numeric: tabular-nums; }
+.ws-page .ws-withdrawal span { display: block; margin-top: 5px; color: var(--ui-muted); font-size: 11px; }
+.ws-page .ws-withdrawal-status { display: inline-flex !important; justify-content: flex-end; font-weight: 700; text-transform: capitalize; }
+.ws-page .ws-withdrawal p { grid-column: 1 / -1; margin: 0; color: #a34851; font-size: 11px; }
+.ws-page .ws-history-empty { padding: 28px 24px; color: var(--ui-muted); font-size: 13px; text-align: center; }
 
 @media (max-width: 1200px) and (min-width: 1001px) {
   .transporter-layout .weekly-settlement-page.ws-page { padding-inline: 28px; }
@@ -113,6 +143,7 @@
   .ws-page .ws-trips-footer { padding-inline: 20px; }
   .ws-page .ws-details { gap: 18px; }
   .ws-page .ws-bank-panel, .ws-page .ws-breakdown { padding: 22px; }
+  .ws-page .ws-withdrawal-list { padding-inline: 20px; }
   .ws-page .ws-actions button { min-height: 48px; }
 }
 
